@@ -1,5 +1,12 @@
 # @vex/ui
 
+## 0.28.0
+
+### Minor Changes
+
+- bd29d8b: The panel glass is reusable: `--vx-glass-panel` holds the whole background (reflection, sheen and tint, with each layer's position, size and attachment), and `--vx-glass-rim-mask` holds the mask that cuts a `::after` down to the lit rim. `.vx-panel` and `.vxp-panel` now use them, so another stylesheet can match the panels with `background: var(--vx-glass-panel)` instead of copying the layers. No visual change.
+- f812c51: A page's starfield (VxSiteShell) now stays put on screen while the page scrolls over it; the pointer parallax is unchanged. VxStarfield draws at its own size, which is still its parent's by default. New `.vx-glass-rim` class gives any element the panel's lit rim, so a theme's own panel class doesn't copy the `::after`.
+
 ## 0.27.0
 
 ### Minor Changes
