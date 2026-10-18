@@ -1,5 +1,5 @@
 ---
-"@vex/ui": patch
+"@vex/ui": minor
 ---
 
-VxAccountMenu's sign-out item now reads "Sign out" (it still ends every session), and VxAccount keeps Sign in greyed out until the account check finishes.
+VxAccountMenu's sign-out item now reads "Sign out" (it still ends every session), and a new `checking` prop greys out Sign in with the tooltip "Checking sign-in…". VxAccount sets it until the account check finishes.

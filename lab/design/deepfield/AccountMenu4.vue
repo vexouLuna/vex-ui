@@ -35,7 +35,7 @@ const opts = inject('dfOpts')
       <button class="menu-item" @click="close"><span class="mi-main">Channel admin</span><span class="chip accent-dtp">broadcaster</span></button>
       <div class="menu-sep"></div>
       <button class="menu-item" @click="close"><span class="mi-main">Settings</span></button>
-      <button class="menu-item bad" @click="opts.signedIn = false"><span class="mi-main">Sign out everywhere</span></button>
+      <button class="menu-item bad" @click="opts.signedIn = false"><span class="mi-main">Sign out</span></button>
     </template>
   </DPop>
 </template>

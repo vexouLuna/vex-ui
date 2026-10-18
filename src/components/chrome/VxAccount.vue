@@ -12,7 +12,8 @@ const account = useAccount()
 <template>
   <VxAccountMenu
     :user="account.menuUser.value"
-    :disabled="!account.enabled || !account.ready.value"
+    :disabled="!account.enabled"
+    :checking="account.enabled && !account.ready.value"
     v-bind="note === undefined ? {} : { note }"
     @sign-in="account.signIn()"
     @sign-out="account.signOut({ everywhere: true })"
