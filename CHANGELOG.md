@@ -1,5 +1,16 @@
 # @vex/ui
 
+## 0.26.0
+
+### Minor Changes
+
+- 2e3a933: Add `VxToc` (an "On this page" table of contents with scroll-spy), and make headings stand out from body text: accent-tinted `.vx-display` gradient, rule above page sections, accent sub-headings.
+- 09ea34d: Glass, picked in the lab's /design/glass: no backdrop blur anywhere (panels, buttons, inputs, code), a thinner tint, a lit rim on `.vx-panel`, and seeded window reflections pinned to the screen that drift at half the scroll speed (VxSiteShell sets `--vx-scroll-y`). New tokens `--vx-glass-rim` and `--vx-glass-reflect`.
+
+### Patch Changes
+
+- ddb475e: VxStarfield: star positions no longer depend on the page height. The sky is built from fixed tiles seeded by their page-absolute position, and pointer parallax is measured against a fixed 900px, so content loading, collapsing or resizing no longer makes the stars jump.
+
 ## 0.25.0
 
 ### Minor Changes
