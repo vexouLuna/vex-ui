@@ -11,7 +11,7 @@ const presets = {
   current: { name: 'Before', tint: 35, line: 9, sheen: 9, edge: 12, stripes: 0, stripeW: 14, stripeGap: 22, angle: 135, streak: 0, rim: 0, bands: 14, bandW: 70, seed: 7, follow: 50 },
   stripes: { name: 'D · Diagonal lines', tint: 12, line: 10, sheen: 0, edge: 10, stripes: 4, stripeW: 16, stripeGap: 26, angle: 135, streak: 0, rim: 0, bands: 14, bandW: 70, seed: 7, follow: 50 },
   rim: { name: 'E · Lit rim', tint: 10, line: 0, sheen: 3, edge: 0, stripes: 0, stripeW: 14, stripeGap: 22, angle: 135, streak: 0, rim: 40, bands: 14, bandW: 70, seed: 7, follow: 50 },
-  reflect: { name: 'F · Window reflection', tint: 15, line: 11, sheen: 3, edge: 11, stripes: 0, stripeW: 9, stripeGap: 11, angle: 120, streak: 5, rim: 43, bands: 16, bandW: 55, seed: 15, follow: 50 },
+  reflect: { name: 'F · Window reflection', tint: 15, line: 11, sheen: 3, edge: 11, stripes: 0, stripeW: 9, stripeGap: 11, angle: 120, streak: 3, rim: 43, bands: 16, bandW: 55, seed: 15, follow: 50 },
 }
 const knobs = [
   ['tint', 'Darkness', 0, 80, '%'], ['line', 'Border', 0, 40, '%'], ['edge', 'Top highlight', 0, 40, '%'],
@@ -99,7 +99,7 @@ const summary = (c) => knobs.map(([k, , , , u]) => `${k} ${c[k]}${u}`).join(', '
           <summary class="vx-label">Knobs</summary>
           <label v-for="[k, label, min, max, unit] in knobs" :key="k">
             <span>{{ label }}</span>
-            <input v-model.number="c[k]" type="range" :min="min" :max="max" />
+            <input v-model.number="c[k]" type="range" :min="min" :max="max" :step="k === 'streak' ? 0.5 : 1" />
             <span class="vx-mono vx-tabular">{{ c[k] }}{{ unit }}</span>
           </label>
           <code class="gl-sum vx-mono">{{ summary(c) }}</code>
