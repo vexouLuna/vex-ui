@@ -16,9 +16,11 @@ const props = withDefaults(
     user?: AccountUser | null
     /** Sign-in isn't set up on this site (no auth service configured): see `@vex/ui/account`. */
     disabled?: boolean
+    /** The account is still being checked: Sign in is greyed out until it's known. */
+    checking?: boolean
     note?: string
   }>(),
-  { user: null, disabled: false, note: 'signed in on all *.vexoul.net' },
+  { user: null, disabled: false, checking: false, note: 'signed in on all *.vexoul.net' },
 )
 const emit = defineEmits<{ signIn: []; signOut: [] }>()
 const nameColor = computed(() => (props.user ? twitchColor(props.user.name, props.user.color) : undefined))
@@ -29,8 +31,8 @@ const nameColor = computed(() => (props.user ? twitchColor(props.user.name, prop
     v-if="!user"
     type="button"
     class="vx-btn vx-signin"
-    :disabled="disabled"
-    :title="disabled ? 'Sign in isn\'t available here' : 'Sign in with Twitch'"
+    :disabled="disabled || checking"
+    :title="checking ? 'Checking sign-in…' : disabled ?'Sign in isn\'t available here' : 'Sign in with Twitch'"
     @click="emit('signIn')"
   >
     <slot name="signin-icon"><VxTwitchGlyph /></slot>
@@ -61,7 +63,7 @@ const nameColor = computed(() => (props.user ? twitchColor(props.user.name, prop
       </div>
       <slot :close="close"></slot>
       <VxMenuSeparator />
-      <VxMenuItem danger @click="emit('signOut'); close()">Sign out everywhere</VxMenuItem>
+      <VxMenuItem danger @click="emit('signOut'); close()">Sign out</VxMenuItem>
     </template>
   </VxPopover>
 </template>

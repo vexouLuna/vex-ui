@@ -12,6 +12,9 @@ import FakeAccount from './FakeAccount.vue'
     <Variant title="Sign-in not available yet">
       <StoryFrame><VxAccountMenu disabled /></StoryFrame>
     </Variant>
+    <Variant title="Checking the account">
+      <StoryFrame><VxAccountMenu checking /></StoryFrame>
+    </Variant>
     <Variant title="Signed in">
       <StoryFrame height="420px">
         <div class="story-row" style="justify-content: flex-end">
