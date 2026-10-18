@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Canvas starfield sized to its parent: seeded, one canvas, ~30fps cap, paused when off-screen,
+// Canvas starfield drawn at its own size (its parent's by default): seeded, one canvas, ~30fps cap, paused when off-screen,
 // and still (no twinkle, drift, parallax or meteors) under prefers-reduced-motion.
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { generateStars, METEOR_GAPS, STARFIELD_DEFAULTS, type Star, type StarfieldOptions } from '../../utils/starfield'
@@ -22,6 +22,7 @@ let stars: Star[] = []
 let nebula: HTMLCanvasElement | null = null
 let w = 0, h = 0, dpr = 1
 let raf = 0, last = 0, visible = true
+const VIEW_H = 900 // parallax is measured in page pixels, so the page height never changes it
 const t0 = performance.now()
 const pointer = { x: 0, y: 0, tx: 0, ty: 0 }
 let meteors: { x: number; y: number; vx: number; vy: number; born: number }[] = []
@@ -148,8 +149,8 @@ function restart() {
 }
 
 function resize() {
-  if (!host || !canvas.value) return
-  const r = host.getBoundingClientRect()
+  if (!canvas.value) return
+  const r = canvas.value.getBoundingClientRect()
   const nw = Math.round(r.width), nh = Math.round(r.height)
   if (nw === w && nh === h) return
   w = nw
@@ -170,7 +171,7 @@ function onMove(e: PointerEvent) {
   if (!host) return
   const r = host.getBoundingClientRect()
   pointer.tx = ((e.clientX - r.left) / r.width - 0.5) * 2
-  pointer.ty = ((e.clientY - r.top) / Math.min(r.height, 900) - 0.5) * 2
+  pointer.ty = ((e.clientY - r.top) / VIEW_H - 0.5) * 2
 }
 
 onMounted(() => {
@@ -181,7 +182,7 @@ onMounted(() => {
   reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
   reduced.addEventListener('change', restart)
   ro = new ResizeObserver(resize)
-  ro.observe(host)
+  ro.observe(canvas.value)
   io = new IntersectionObserver(onVisibility)
   io.observe(host)
   host.addEventListener('pointermove', onMove)

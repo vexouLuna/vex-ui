@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 // platform-web is a devDependency pinned to the release the sites use; bump it with them.
-const platformCss = readFileSync(createRequire(import.meta.url).resolve('@vexoulz/platform-web/style.css'), 'utf8')
+const platformCss = readFileSync(createRequire(import.meta.url).resolve('@vex/platform-web/style.css'), 'utf8')
 const mapping = readFileSync(resolve(ROOT, 'src/styles/platform.css'), 'utf8')
 const tokens = readFileSync(resolve(ROOT, 'src/styles/tokens.css'), 'utf8')
 
@@ -32,6 +32,14 @@ describe('platform.css', () => {
     const known = declared(tokens, '--vx-')
     const read = [...noComments(mapping).matchAll(/var\((--vx-[\w-]+)/g)].map((m) => m[1]!)
     expect(read.filter((v) => !known.has(v))).toEqual([])
+  })
+
+  it('takes the panel glass from the shared token instead of copying its layers', () => {
+    const base = readFileSync(resolve(ROOT, 'src/styles/base.css'), 'utf8')
+    for (const css of [mapping, base]) {
+      expect(noComments(css)).toContain('background: var(--vx-glass-panel)')
+      expect(noComments(css)).not.toContain('--vx-glass-reflect')
+    }
   })
 
   it('sits on plain :root, so it outranks platform-web’s :where(:root) defaults', () => {

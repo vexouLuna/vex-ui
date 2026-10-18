@@ -44,11 +44,18 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   font-weight: 500;
   line-height: 1.15;
   margin: 0;
-  background-image: linear-gradient(90deg, #5a5a5a, #fff 70%);
+  background-image: linear-gradient(90deg, var(--vx-heading-from), var(--vx-heading-to) 70%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.vx-display { padding-bottom: 0.08em; /* the clipped gradient cuts descenders otherwise */ }
+/* Inside a page: a section heading is bigger, set off by a rule above it, and a sub-heading wears the accent, so
+   scrolling past one is easy to see. Headings carry an id for links; the clearance keeps them below the header. */
+.vx-main :is(h2, h3)[id], .vx-main h2.vx-display { scroll-margin-top: 64px; }
+.vx-main h2.vx-display:not(:first-child) { margin-top: 2.2em; padding-top: 0.7em; border-top: 1px solid var(--vx-line); }
+.vx-main h2.vx-display { font-size: 1.5rem; margin-bottom: 0.5em; }
+.vx-main h3:not(.vx-display) { font-family: var(--vx-font-mono); font-weight: 500; font-size: 1.05rem; color: var(--vx-accent); margin: 1.6em 0 0.4em; }
 .vx-eyebrow {
   font-family: var(--vx-font-mono);
   font-size: 11px;
@@ -63,10 +70,23 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
 
 /* ---------- Surfaces ---------- */
 .vx-panel {
-  background: var(--vx-glass-sheen), var(--vx-glass-clear);
+  position: relative;
+  background: var(--vx-glass-panel);
   border: 1px solid var(--vx-glass-line);
   border-radius: var(--vx-radius);
   box-shadow: var(--vx-glass-edge);
+}
+/* The lit rim. .vx-glass-rim gives it to any element (a theme's own panel class), so the ::after isn't copied. */
+.vx-glass-rim { position: relative; }
+.vx-panel::after, .vx-glass-rim::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--vx-glass-rim);
+  mask: var(--vx-glass-rim-mask);
 }
 .vx-pop {
   background: var(--vx-pop);
@@ -92,12 +112,11 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   font-family: var(--vx-font-mono);
   font-size: 13px;
   line-height: 1.55;
-  /* Frosted glass like the buttons: the starfield shows through, and the blur keeps stars out of the text. */
+  /* Clear glass like the buttons: the starfield shows through. */
   background: var(--vx-glass);
   border: 1px solid var(--vx-glass-line);
   border-radius: var(--vx-radius-sm);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--vx-glass-edge);
 }
 .vx-tok-prefix, .vx-tok-cmd { color: var(--vx-accent); font-weight: 600; }
 .vx-tok-op { color: var(--vx-bad); font-weight: 600; }

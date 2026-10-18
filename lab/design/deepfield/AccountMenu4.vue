@@ -24,7 +24,7 @@ const opts = inject('dfOpts')
       <div class="who">
         <Ph label="pfp" :w="36" :h="36" round />
         <div>
-          <div class="name" :style="{ color: twitchColor('vexoulz', 'readable') }">vexoulz</div>
+          <div class="name" :style="{ color: twitchColor('vexouluna', 'readable') }">vexouluna</div>
           <div class="muted small mono">signed in on all *.vexoul.net</div>
         </div>
       </div>
@@ -35,7 +35,7 @@ const opts = inject('dfOpts')
       <button class="menu-item" @click="close"><span class="mi-main">Channel admin</span><span class="chip accent-dtp">broadcaster</span></button>
       <div class="menu-sep"></div>
       <button class="menu-item" @click="close"><span class="mi-main">Settings</span></button>
-      <button class="menu-item bad" @click="opts.signedIn = false"><span class="mi-main">Sign out everywhere</span></button>
+      <button class="menu-item bad" @click="opts.signedIn = false"><span class="mi-main">Sign out</span></button>
     </template>
   </DPop>
 </template>
