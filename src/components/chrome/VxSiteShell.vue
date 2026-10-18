@@ -37,10 +37,24 @@ const seed = computed(() => props.seed ?? siteInfo(props.site).host)
 function applyGlobal() {
   if (props.global) document.documentElement.dataset.site = props.site
 }
-onMounted(applyGlobal)
+
+// The page scroll as --vx-scroll-y, so .vx-panel's screen-pinned reflection can drift at half the scroll speed.
+let frame = 0
+function onScroll() {
+  cancelAnimationFrame(frame)
+  frame = requestAnimationFrame(() => document.documentElement.style.setProperty('--vx-scroll-y', `${window.scrollY}px`))
+}
+onMounted(() => {
+  applyGlobal()
+  if (!props.global) return
+  window.addEventListener('scroll', onScroll, { passive: true })
+  onScroll()
+})
 watch(() => props.site, applyGlobal)
 onUnmounted(() => {
   if (props.global && document.documentElement.dataset.site === props.site) delete document.documentElement.dataset.site
+  window.removeEventListener('scroll', onScroll)
+  cancelAnimationFrame(frame)
 })
 </script>
 

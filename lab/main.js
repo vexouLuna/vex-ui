@@ -7,6 +7,7 @@ import App from './App.vue'
 // Same paths as the copy in vex-root, so the labs' links between versions keep working.
 const routes = [
   { path: '/', redirect: '/design/deepfield/v4' },
+  { path: '/design/glass', component: () => import('./design/GlassLab.vue') },
   { path: '/design', component: () => import('./design/DesignLab.vue') },
   { path: '/design/deepfield', component: () => import('./design/deepfield/DFLab.vue') },
   { path: '/design/deepfield/v2', component: () => import('./design/deepfield/DF2Lab.vue') },
