@@ -13,6 +13,9 @@
   --vx-warn: #e8c35a;
   --vx-bad: #ff6b5e;
   --vx-ring: #fff;
+  /* Headings: the site's accent into white, so a heading never reads as body text (--vx-ink). */
+  --vx-heading-from: color-mix(in srgb, var(--vx-accent) 80%, #6a6a6a);
+  --vx-heading-to: color-mix(in srgb, var(--vx-accent) 35%, #fff);
 
   /* Each site's accent comes from its entry in src/sites.ts (--vx-accent-<id>, switched by data-site); this is the
      accent outside any site shell. --vx-info is the pale star blue for neutral highlights. */

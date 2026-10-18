@@ -44,11 +44,18 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   font-weight: 500;
   line-height: 1.15;
   margin: 0;
-  background-image: linear-gradient(90deg, #5a5a5a, #fff 70%);
+  background-image: linear-gradient(90deg, var(--vx-heading-from), var(--vx-heading-to) 70%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.vx-display { padding-bottom: 0.08em; /* the clipped gradient cuts descenders otherwise */ }
+/* Inside a page: a section heading is bigger, set off by a rule above it, and a sub-heading wears the accent, so
+   scrolling past one is easy to see. Headings carry an id for links; the clearance keeps them below the header. */
+.vx-main :is(h2, h3)[id], .vx-main h2.vx-display { scroll-margin-top: 64px; }
+.vx-main h2.vx-display:not(:first-child) { margin-top: 2.2em; padding-top: 0.7em; border-top: 1px solid var(--vx-line); }
+.vx-main h2.vx-display { font-size: 1.5rem; margin-bottom: 0.5em; }
+.vx-main h3:not(.vx-display) { font-family: var(--vx-font-mono); font-weight: 500; font-size: 1.05rem; color: var(--vx-accent); margin: 1.6em 0 0.4em; }
 .vx-eyebrow {
   font-family: var(--vx-font-mono);
   font-size: 11px;

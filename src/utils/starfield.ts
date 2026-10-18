@@ -68,23 +68,37 @@ function bandDist(x: number, y: number, w: number, h: number) {
   return Math.abs(dy * x - dx * y + x2 * y1 - y2 * x1) / Math.hypot(dx, dy)
 }
 
-/** Deterministic stars for a seed and size. Also returns the rng so the nebula continues the same sequence. */
+/** Side of the square tiles the sky is generated in. A star's place depends only on its tile, never on the page size. */
+const TILE = 400
+
+/**
+ * Deterministic stars for a seed and size. The sky is built from fixed tiles seeded by their page-absolute
+ * position, so a taller or wider page only reveals or hides stars: none move. Also returns an rng for the nebula.
+ */
 export function generateStars(seed: string, w: number, h: number, o: StarfieldOptions) {
-  const rnd = mulberry32(hashString(seed))
-  const noise = createNoise(rnd())
+  const base = hashString(seed)
+  const noise = createNoise(mulberry32(base)())
   const spectrum = SPECTRA[o.spectrum] ?? SPECTRA.classic
   const bandW = Math.min(w, 900) * 0.16
-  const target = Math.round((o.density * w * h) / 10000)
+  const perTile = Math.round((o.density * TILE * TILE) / 10000)
   const stars: Star[] = []
-  for (let tries = 0; stars.length < target && tries < target * 25; tries++) {
-    const x = rnd() * w, y = rnd() * h
-    let chance = 1 - o.cluster + o.cluster * ((noise.perlin2(x / 140, y / 140) + 0.5) / 1.5)
-    if (o.band) chance *= 0.3 + 1.4 * Math.exp(-((bandDist(x, y, w, h) / bandW) ** 2))
-    if (rnd() > chance) continue
-    const roll = rnd()
-    const [, color, mult] = spectrum.find(([p]) => roll < p) ?? spectrum[spectrum.length - 1]!
-    const size = Math.floor(2 * mult * rnd()) + 1
-    stars.push({ x, y, size, color, depth: 0.2 + rnd() * 0.8, period: rnd() * 5 + 1, phase: rnd() * Math.PI * 2 })
+  for (let ty = 0; ty * TILE < h; ty++) {
+    for (let tx = 0; tx * TILE < w; tx++) {
+      const rnd = mulberry32(hashString(`${seed}:${tx}:${ty}`))
+      let made = 0
+      for (let tries = 0; made < perTile && tries < perTile * 25; tries++) {
+        const x = (tx + rnd()) * TILE, y = (ty + rnd()) * TILE
+        let chance = 1 - o.cluster + o.cluster * ((noise.perlin2(x / 140, y / 140) + 0.5) / 1.5)
+        if (o.band) chance *= 0.3 + 1.4 * Math.exp(-((bandDist(x, y, w, h) / bandW) ** 2))
+        if (rnd() > chance) continue
+        made++
+        const roll = rnd()
+        const [, color, mult] = spectrum.find(([p]) => roll < p) ?? spectrum[spectrum.length - 1]!
+        const size = Math.floor(2 * mult * rnd()) + 1
+        const star = { x, y, size, color, depth: 0.2 + rnd() * 0.8, period: rnd() * 5 + 1, phase: rnd() * Math.PI * 2 }
+        if (x < w && y < h) stars.push(star)
+      }
+    }
   }
-  return { stars, rnd, bandW }
+  return { stars, rnd: mulberry32(base ^ 0x9e3779b9), bandW }
 }
