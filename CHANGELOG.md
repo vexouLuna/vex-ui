@@ -1,5 +1,11 @@
 # @vex/ui
 
+## 0.28.1
+
+### Patch Changes
+
+- 3bcf368: Headings (`.vx-display`) take the site's accent: `--vx-heading-from`/`--vx-heading-to` are now worked out under `[data-site]` too, where they were stuck on the default accent and read as near-white body text.
+
 ## 0.28.0
 
 ### Minor Changes
