@@ -22,6 +22,7 @@ let stars: Star[] = []
 let nebula: HTMLCanvasElement | null = null
 let w = 0, h = 0, dpr = 1
 let raf = 0, last = 0, visible = true
+const VIEW_H = 900 // parallax is measured in page pixels, so the page height never changes it
 const t0 = performance.now()
 const pointer = { x: 0, y: 0, tx: 0, ty: 0 }
 let meteors: { x: number; y: number; vx: number; vy: number; born: number }[] = []
@@ -170,7 +171,7 @@ function onMove(e: PointerEvent) {
   if (!host) return
   const r = host.getBoundingClientRect()
   pointer.tx = ((e.clientX - r.left) / r.width - 0.5) * 2
-  pointer.ty = ((e.clientY - r.top) / Math.min(r.height, 900) - 0.5) * 2
+  pointer.ty = ((e.clientY - r.top) / VIEW_H - 0.5) * 2
 }
 
 onMounted(() => {
