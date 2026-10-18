@@ -1,5 +1,15 @@
 # @vex/ui
 
+## 0.27.0
+
+### Minor Changes
+
+- 0d2882b: VxAccountMenu's sign-out item now reads "Sign out" (it still ends every session), and a new `checking` prop greys out Sign in with the tooltip "Checking sign-in…". VxAccount sets it until the account check finishes.
+
+### Patch Changes
+
+- 4f3bd32: Softer window reflections on glass panels: the bands drop from 5% to 3%. The strength is now one token, `--vx-glass-streak`.
+
 ## 0.26.0
 
 ### Minor Changes
