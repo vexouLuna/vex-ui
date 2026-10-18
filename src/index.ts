@@ -15,6 +15,7 @@ export { default as VxTwitchGlyph } from './components/chrome/VxTwitchGlyph.vue'
 export { default as VxAccountMenu } from './components/chrome/VxAccountMenu.vue'
 export { default as VxAccount } from './components/chrome/VxAccount.vue'
 export { default as VxLink } from './components/chrome/VxLink.vue'
+export { default as VxToc } from './components/chrome/VxToc.vue'
 
 // Controls
 export { default as VxButton } from './components/controls/VxButton.vue'
