@@ -70,10 +70,26 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
 
 /* ---------- Surfaces ---------- */
 .vx-panel {
-  background: var(--vx-glass-sheen), var(--vx-glass-clear);
+  position: relative;
+  background: var(--vx-glass-reflect), var(--vx-glass-sheen), var(--vx-glass-clear);
+  /* The reflection is pinned to the screen, so it lines up across panels, and drifts up at half the scroll speed
+     (VxSiteShell sets --vx-scroll-y; without it the reflection simply stays put on screen). */
+  background-attachment: fixed, scroll, scroll;
+  background-position: 0 calc(var(--vx-scroll-y, 0px) * -0.5), 0 0, 0 0;
+  background-size: 100% 3200px, auto, auto;
   border: 1px solid var(--vx-glass-line);
   border-radius: var(--vx-radius);
   box-shadow: var(--vx-glass-edge);
+}
+.vx-panel::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--vx-glass-rim);
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
 }
 .vx-pop {
   background: var(--vx-pop);
@@ -99,12 +115,11 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   font-family: var(--vx-font-mono);
   font-size: 13px;
   line-height: 1.55;
-  /* Frosted glass like the buttons: the starfield shows through, and the blur keeps stars out of the text. */
+  /* Clear glass like the buttons: the starfield shows through. */
   background: var(--vx-glass);
   border: 1px solid var(--vx-glass-line);
   border-radius: var(--vx-radius-sm);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--vx-glass-edge);
 }
 .vx-tok-prefix, .vx-tok-cmd { color: var(--vx-accent); font-weight: 600; }
 .vx-tok-op { color: var(--vx-bad); font-weight: 600; }

@@ -38,7 +38,13 @@
 /* Panels get .vx-panel's sheen and lit edge. A dialog sits over the page, not the sky, so it keeps the near-opaque
    popup fill like VxDialog. */
 dialog.vxp-dialog { background: var(--vx-pop); }
-.vxp-panel { background: var(--vx-glass-sheen), var(--vx-glass-clear); box-shadow: var(--vx-glass-edge); }
+.vxp-panel {
+  background: var(--vx-glass-reflect), var(--vx-glass-sheen), var(--vx-glass-clear);
+  background-attachment: fixed, scroll, scroll;
+  background-position: 0 calc(var(--vx-scroll-y, 0px) * -0.5), 0 0, 0 0;
+  background-size: 100% 3200px, auto, auto;
+  box-shadow: var(--vx-glass-edge);
+}
 
 /* The chat user card floats over chat, not the sky: the popup fill, frosted like the buttons so what's behind it blurs
    away. The card's own background is scoped (a class plus an attribute), so this rule needs the extra `:root body`
