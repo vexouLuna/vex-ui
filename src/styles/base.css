@@ -71,17 +71,14 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
 /* ---------- Surfaces ---------- */
 .vx-panel {
   position: relative;
-  background: var(--vx-glass-reflect), var(--vx-glass-sheen), var(--vx-glass-clear);
-  /* The reflection is pinned to the screen, so it lines up across panels, and drifts up at half the scroll speed
-     (VxSiteShell sets --vx-scroll-y; without it the reflection simply stays put on screen). */
-  background-attachment: fixed, scroll, scroll;
-  background-position: 0 calc(var(--vx-scroll-y, 0px) * -0.5), 0 0, 0 0;
-  background-size: 100% 3200px, auto, auto;
+  background: var(--vx-glass-panel);
   border: 1px solid var(--vx-glass-line);
   border-radius: var(--vx-radius);
   box-shadow: var(--vx-glass-edge);
 }
-.vx-panel::after {
+/* The lit rim. .vx-glass-rim gives it to any element (a theme's own panel class), so the ::after isn't copied. */
+.vx-glass-rim { position: relative; }
+.vx-panel::after, .vx-glass-rim::after {
   content: '';
   position: absolute;
   inset: -1px;
@@ -89,7 +86,7 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   border-radius: inherit;
   pointer-events: none;
   background: var(--vx-glass-rim);
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  mask: var(--vx-glass-rim-mask);
 }
 .vx-pop {
   background: var(--vx-pop);

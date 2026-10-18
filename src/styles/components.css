@@ -610,6 +610,18 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 
 /* ---------- Starfield ---------- */
 .vx-starfield { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+/* A page's sky stays put on screen while the page scrolls over it. Not fixed: .vx-site's container query makes it the
+   containing block for position:fixed. Sticky at one screen tall, with the negative margin so it takes no room.
+   lvh (the largest viewport) so a phone's collapsing address bar doesn't resize and redraw it. */
+.vx-site.is-page:not(.is-fill) > .vx-starfield {
+  position: sticky;
+  top: 0;
+  flex: none;
+  height: 100vh;
+  height: 100lvh;
+  margin-bottom: -100vh;
+  margin-bottom: -100lvh;
+}
 
 /* ---------- Posters (game box art, 3:4) ---------- */
 /* isolate: the posters' own z-order (front poster on top) stays inside the group, so it never paints over sticky

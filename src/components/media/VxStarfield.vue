@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Canvas starfield sized to its parent: seeded, one canvas, ~30fps cap, paused when off-screen,
+// Canvas starfield drawn at its own size (its parent's by default): seeded, one canvas, ~30fps cap, paused when off-screen,
 // and still (no twinkle, drift, parallax or meteors) under prefers-reduced-motion.
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { generateStars, METEOR_GAPS, STARFIELD_DEFAULTS, type Star, type StarfieldOptions } from '../../utils/starfield'
@@ -149,8 +149,8 @@ function restart() {
 }
 
 function resize() {
-  if (!host || !canvas.value) return
-  const r = host.getBoundingClientRect()
+  if (!canvas.value) return
+  const r = canvas.value.getBoundingClientRect()
   const nw = Math.round(r.width), nh = Math.round(r.height)
   if (nw === w && nh === h) return
   w = nw
@@ -182,7 +182,7 @@ onMounted(() => {
   reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
   reduced.addEventListener('change', restart)
   ro = new ResizeObserver(resize)
-  ro.observe(host)
+  ro.observe(canvas.value)
   io = new IntersectionObserver(onVisibility)
   io.observe(host)
   host.addEventListener('pointermove', onMove)

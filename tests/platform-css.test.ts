@@ -34,6 +34,14 @@ describe('platform.css', () => {
     expect(read.filter((v) => !known.has(v))).toEqual([])
   })
 
+  it('takes the panel glass from the shared token instead of copying its layers', () => {
+    const base = readFileSync(resolve(ROOT, 'src/styles/base.css'), 'utf8')
+    for (const css of [mapping, base]) {
+      expect(noComments(css)).toContain('background: var(--vx-glass-panel)')
+      expect(noComments(css)).not.toContain('--vx-glass-reflect')
+    }
+  })
+
   it('sits on plain :root, so it outranks platform-web’s :where(:root) defaults', () => {
     expect(noComments(mapping).trim()).toMatch(/^:root\s*\{/)
   })
