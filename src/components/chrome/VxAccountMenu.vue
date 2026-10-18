@@ -61,7 +61,7 @@ const nameColor = computed(() => (props.user ? twitchColor(props.user.name, prop
       </div>
       <slot :close="close"></slot>
       <VxMenuSeparator />
-      <VxMenuItem danger @click="emit('signOut'); close()">Sign out everywhere</VxMenuItem>
+      <VxMenuItem danger @click="emit('signOut'); close()">Sign out</VxMenuItem>
     </template>
   </VxPopover>
 </template>
