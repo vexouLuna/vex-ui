@@ -57,6 +57,16 @@
     transparent 1400.7px, rgb(255 255 255 / calc(var(--vx-glass-streak) * 0.88)) 1400.7px 1450.7px, transparent 1450.7px,
     transparent 1506.6px, rgb(255 255 255 / calc(var(--vx-glass-streak) * 0.82)) 1506.6px 1520.4px, transparent 1520.4px,
     transparent 1600px);
+  /* The whole panel glass as one background value, for .vx-panel and for any stylesheet that wants the same look
+     (vxp-panel, a theme's own panel class): `background: var(--vx-glass-panel)`. The shorthand carries each layer's
+     position, size and attachment, so nothing has to be copied. The reflection is pinned to the screen, so it lines
+     up across panels, and drifts up at half the scroll speed (VxSiteShell sets --vx-scroll-y on <html>). */
+  --vx-glass-panel:
+    var(--vx-glass-reflect) 0 calc(var(--vx-scroll-y, 0px) * -0.5) / 100% 3200px fixed,
+    var(--vx-glass-sheen),
+    var(--vx-glass-clear);
+  /* Cuts a ::after down to its 1px padding ring, for the lit rim: `background: var(--vx-glass-rim); mask: var(...)`. */
+  --vx-glass-rim-mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   --vx-hover: rgb(255 255 255 / 0.06);
   --vx-pop: rgb(12 12 16 / 0.94);
   --vx-shadow: 0 16px 40px rgb(0 0 0 / 0.6);
