@@ -12,14 +12,25 @@ describe('starfield', () => {
     expect(a).not.toEqual(c)
   })
 
-  it('hits the density target inside the area', () => {
+  it('stays near the density target inside the area', () => {
     const { stars } = generateStars('vexoul.net', 1000, 1000, STARFIELD_DEFAULTS)
-    expect(stars).toHaveLength(Math.round((STARFIELD_DEFAULTS.density * 1000 * 1000) / 10000))
+    const target = (STARFIELD_DEFAULTS.density * 1000 * 1000) / 10000
+    expect(stars.length).toBeGreaterThan(target * 0.9)
+    expect(stars.length).toBeLessThan(target * 1.1)
     for (const s of stars) {
       expect(s.x).toBeGreaterThanOrEqual(0)
       expect(s.x).toBeLessThan(1000)
       expect(s.size).toBeGreaterThanOrEqual(1)
     }
+  })
+
+  it('does not move a star when the page height changes', () => {
+    const short = generateStars('vexoul.net', 900, 700, STARFIELD_DEFAULTS).stars
+    const tall = generateStars('vexoul.net', 900, 3000, STARFIELD_DEFAULTS).stars
+    const key = (s: { x: number; y: number }) => `${s.x},${s.y}`
+    const inTall = new Set(tall.map(key))
+    expect(short.length).toBeGreaterThan(0)
+    for (const s of short) expect(inTall.has(key(s))).toBe(true)
   })
 
   it('perlin noise is seeded, bounded and zero on grid points', () => {
