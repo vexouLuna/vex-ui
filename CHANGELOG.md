@@ -1,4 +1,42 @@
-# @vexoulz/ui
+# @vex/ui
+
+## 0.28.0
+
+### Minor Changes
+
+- bd29d8b: The panel glass is reusable: `--vx-glass-panel` holds the whole background (reflection, sheen and tint, with each layer's position, size and attachment), and `--vx-glass-rim-mask` holds the mask that cuts a `::after` down to the lit rim. `.vx-panel` and `.vxp-panel` now use them, so another stylesheet can match the panels with `background: var(--vx-glass-panel)` instead of copying the layers. No visual change.
+- f812c51: A page's starfield (VxSiteShell) now stays put on screen while the page scrolls over it; the pointer parallax is unchanged. VxStarfield draws at its own size, which is still its parent's by default. New `.vx-glass-rim` class gives any element the panel's lit rim, so a theme's own panel class doesn't copy the `::after`.
+
+## 0.27.0
+
+### Minor Changes
+
+- 0d2882b: VxAccountMenu's sign-out item now reads "Sign out" (it still ends every session), and a new `checking` prop greys out Sign in with the tooltip "Checking sign-in…". VxAccount sets it until the account check finishes.
+
+### Patch Changes
+
+- 4f3bd32: Softer window reflections on glass panels: the bands drop from 5% to 3%. The strength is now one token, `--vx-glass-streak`.
+
+## 0.26.0
+
+### Minor Changes
+
+- 2e3a933: Add `VxToc` (an "On this page" table of contents with scroll-spy), and make headings stand out from body text: accent-tinted `.vx-display` gradient, rule above page sections, accent sub-headings.
+- 09ea34d: Glass, picked in the lab's /design/glass: no backdrop blur anywhere (panels, buttons, inputs, code), a thinner tint, a lit rim on `.vx-panel`, and seeded window reflections pinned to the screen that drift at half the scroll speed (VxSiteShell sets `--vx-scroll-y`). New tokens `--vx-glass-rim` and `--vx-glass-reflect`.
+
+### Patch Changes
+
+- ddb475e: VxStarfield: star positions no longer depend on the page height. The sky is built from fixed tiles seeded by their page-absolute position, and pointer parallax is measured against a fixed 900px, so content loading, collapsing or resizing no longer makes the stars jump.
+
+## 0.25.0
+
+### Minor Changes
+
+- c3a715a: The package is now `@vex/ui`, installed from `github:vexouLuna/vex-ui`, and it uses `@vex/platform-web` 0.9.0. Sites
+  change their imports from `@vexoulz/ui` (and `/account`, `/utils`, the CSS entries) to `@vex/ui` when they bump, together
+  with `@vex/platform-web`. Sign-in now sends its CSRF token as `X-Vex-CSRF` (`CSRF_HEADER`); vex-auth accepts both names.
+  The site list's `repo` fields and the footer's issue and commit links point at the renamed `vexouLuna/*` repos, and the
+  footer credit reads "made by vexouLuna".
 
 ## 0.24.1
 
@@ -153,7 +191,7 @@
 
 - 1aff2f6: For status.vexoulz.net:
   
-  - `status` in `SITES` (lavender accent, hidden until the site is live, repo `vEXOULZ/vexoulz-status`).
+  - `status` in `SITES` (lavender accent, hidden until the site is live, repo `vexouLuna/vex-status`).
   - `VxStatusDot` takes `status="down"`: plain red, where `live` is red with a halo. Its statuses other than `live`
     are the new `Health` type (`ok | warn | down | off`).
   - `VxUptimeBar`: a row of ticks, one per check, hour or day, coloured by `Health`, with each tick's label shown on

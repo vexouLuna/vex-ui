@@ -12,10 +12,13 @@ import FakeAccount from './FakeAccount.vue'
     <Variant title="Sign-in not available yet">
       <StoryFrame><VxAccountMenu disabled /></StoryFrame>
     </Variant>
+    <Variant title="Checking the account">
+      <StoryFrame><VxAccountMenu checking /></StoryFrame>
+    </Variant>
     <Variant title="Signed in">
       <StoryFrame height="420px">
         <div class="story-row" style="justify-content: flex-end">
-          <VxAccountMenu :user="{ name: 'vexoulz', color: '#9146FF' }">
+          <VxAccountMenu :user="{ name: 'vexouluna', color: '#9146FF' }">
             <template #default="{ close }">
               <VxMenuLabel>vods</VxMenuLabel>
               <VxMenuItem sub="resume 1:02:44" @click="close">Watch history</VxMenuItem>
@@ -28,7 +31,7 @@ import FakeAccount from './FakeAccount.vue'
       </StoryFrame>
     </Variant>
     <Variant title="Connected: VxAccount">
-      <!-- VxAccountMenu wired to useAccount(); here a fake vexoulz-auth answers. -->
+      <!-- VxAccountMenu wired to useAccount(); here a fake vex-auth answers. -->
       <StoryFrame height="320px">
         <div class="story-row" style="justify-content: space-between">
           <FakeAccount off><VxAccount /></FakeAccount>

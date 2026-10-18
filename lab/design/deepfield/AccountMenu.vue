@@ -28,7 +28,7 @@ onUnmounted(() => document.removeEventListener('pointerdown', close))
         <div class="who">
           <Ph label="pfp" :w="36" :h="36" round />
           <div>
-            <div class="name" :style="{ color: twitchColor('vexoulz', opts.chatColors || 'readable') }">vexoulz</div>
+            <div class="name" :style="{ color: twitchColor('vexouluna', opts.chatColors || 'readable') }">vexouluna</div>
             <div class="muted small mono">signed in on all *.vexoul.net</div>
           </div>
         </div>
@@ -39,7 +39,7 @@ onUnmounted(() => document.removeEventListener('pointerdown', close))
         <a href="#" class="item" @click.prevent>Channel admin <span class="chip accent-dtp">broadcaster</span></a>
         <div class="sep"></div>
         <a href="#" class="item" @click.prevent>Settings</a>
-        <a href="#" class="item bad" @click.prevent="opts.signedIn = false; open = false">Sign out everywhere</a>
+        <a href="#" class="item bad" @click.prevent="opts.signedIn = false; open = false">Sign out</a>
       </div>
     </template>
   </div>
