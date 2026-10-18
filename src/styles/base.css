@@ -76,7 +76,9 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   border-radius: var(--vx-radius);
   box-shadow: var(--vx-glass-edge);
 }
-.vx-panel::after {
+/* The lit rim. .vx-glass-rim gives it to any element (a theme's own panel class), so the ::after isn't copied. */
+.vx-glass-rim { position: relative; }
+.vx-panel::after, .vx-glass-rim::after {
   content: '';
   position: absolute;
   inset: -1px;
