@@ -1,6 +1,15 @@
 /* Deep Field tokens. Chosen in the lab (v4): Geist + Geist Mono, mono headings, grey→white display fill,
    star-pastel accents, glass panels, ring hover, one 32px control height, one 48px header. */
 
+/* Headings: the site's accent into white, so a heading never reads as body text (--vx-ink). Also on [data-site],
+   where the accent is switched: a custom property's var() resolves where it's declared, so on :root alone these
+   would stay the default accent below. */
+:root,
+[data-site] {
+  --vx-heading-from: color-mix(in srgb, var(--vx-accent) 80%, #6a6a6a);
+  --vx-heading-to: color-mix(in srgb, var(--vx-accent) 35%, #fff);
+}
+
 :root {
   /* Colour */
   --vx-bg: #000;
@@ -13,10 +22,6 @@
   --vx-warn: #e8c35a;
   --vx-bad: #ff6b5e;
   --vx-ring: #fff;
-  /* Headings: the site's accent into white, so a heading never reads as body text (--vx-ink). */
-  --vx-heading-from: color-mix(in srgb, var(--vx-accent) 80%, #6a6a6a);
-  --vx-heading-to: color-mix(in srgb, var(--vx-accent) 35%, #fff);
-
   /* Each site's accent comes from its entry in src/sites.ts (--vx-accent-<id>, switched by data-site); this is the
      accent outside any site shell. --vx-info is the pale star blue for neutral highlights. */
   --vx-info: #d5e0ff;
