@@ -139,8 +139,31 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
 
 .vx-date-range { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .vx-date-range-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.vx-date-range-row .vx-input { flex: 1; }
+.vx-date-range-row .vx-date-input { flex: 1; }
 .vx-date-range-presets { display: flex; gap: 6px; flex-wrap: wrap; }
+.vx-date-input { width: 100%; }
+.vx-date-input .vx-input { font-variant-numeric: tabular-nums; }
+.vx-cal { padding: 6px; }
+.vx-cal-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 4px; }
+.vx-cal-month { font-size: 13px; font-weight: 600; }
+.vx-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.vx-cal-wd { text-align: center; font: 11px/24px var(--vx-font-mono); color: var(--vx-muted); }
+.vx-cal-day {
+  height: var(--vx-ctl);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--vx-radius-sm);
+  background: none;
+  color: var(--vx-ink);
+  font: 12px var(--vx-font-mono);
+  cursor: pointer;
+}
+.vx-cal-day:hover:not(:disabled) { background: var(--vx-hover); }
+.vx-cal-day:focus-visible { outline: 2px solid var(--vx-ring); outline-offset: -2px; }
+.vx-cal-day.is-out { color: var(--vx-muted); }
+.vx-cal-day.is-today { border-color: var(--vx-line); }
+.vx-cal-day.is-picked { background: var(--vx-accent); color: var(--vx-bg); font-weight: 700; }
+.vx-cal-day:disabled { opacity: 0.3; cursor: default; }
 
 .vx-select { min-width: 160px; justify-content: space-between; }
 .vx-popover.is-fill, .vx-select.is-fill { width: 100%; }
