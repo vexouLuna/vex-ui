@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import VxButton from '../src/components/controls/VxButton.vue'
 import VxInput from '../src/components/controls/VxInput.vue'
+import VxSaveBar from '../src/components/controls/VxSaveBar.vue'
 import VxPagination from '../src/components/controls/VxPagination.vue'
 import VxPlaceholder from '../src/components/media/VxPlaceholder.vue'
 import VxStepper from '../src/components/controls/VxStepper.vue'
@@ -270,5 +271,20 @@ describe('VxSiteHeader', () => {
     expect(vods!.find('.vx-offsite').exists()).toBe(false)
     expect(live!.attributes('target')).toBe('_blank')
     expect(live!.get('.vx-offsite').text()).toBe('↗')
+  })
+})
+
+describe('VxSaveBar', () => {
+  it('counts changes, emits undo and save, and blocks Save with nothing to save', async () => {
+    const w = mount(VxSaveBar, { props: { count: 2 } })
+    expect(w.text()).toContain('2 unsaved changes')
+    const [undo, save] = w.findAll('button')
+    await undo!.trigger('click')
+    await save!.trigger('click')
+    expect(w.emitted('undo')).toHaveLength(1)
+    expect(w.emitted('save')).toHaveLength(1)
+    await w.setProps({ count: 0 })
+    expect(w.text()).toContain('No changes')
+    expect(save!.attributes('disabled')).toBeDefined()
   })
 })
