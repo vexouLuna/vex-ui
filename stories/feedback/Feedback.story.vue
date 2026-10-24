@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { VxButton, VxCallout, VxEmptyState, VxProgress, VxSkeleton, VxSpinner } from '../../src'
+import { ref } from 'vue'
+import { VxButton, VxCallout, VxEmptyState, VxLoadState, VxProgress, VxSkeleton, VxSpinner } from '../../src'
 import StoryFrame from '../StoryFrame.vue'
+
+const states = ['error', 'loading', 'empty', 'loaded'] as const
+const state = ref<(typeof states)[number]>('error')
 </script>
 
 <template>
@@ -44,6 +48,27 @@ import StoryFrame from '../StoryFrame.vue'
             <VxButton href="#">Browse VODs</VxButton>
           </template>
         </VxEmptyState>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Load state">
+      <!-- One wrapper for error + Try again, skeleton rows while loading, the empty state, then the content. -->
+      <StoryFrame site="dtp">
+        <div class="story-col" style="max-width: 640px">
+          <div class="story-row">
+            <VxButton v-for="s in states" :key="s" size="sm" :pressed="state === s" @click="state = s">{{ s }}</VxButton>
+          </div>
+          <VxLoadState
+            :error="state === 'error' ? new Error('502 from the bot API') : null"
+            :loading="state === 'loading'"
+            :empty="state === 'empty'"
+            error-title="Couldn't load the replies"
+            empty-title="No replies yet"
+            empty-text="Add one with !reply add in chat."
+            @retry="state = 'loading'"
+          >
+            <p style="margin: 0">The content, once there's data.</p>
+          </VxLoadState>
+        </div>
       </StoryFrame>
     </Variant>
   </Story>
