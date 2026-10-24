@@ -30,6 +30,14 @@ import FakeAccount from './FakeAccount.vue'
         </div>
       </StoryFrame>
     </Variant>
+    <Variant title="Signed in: on the account page">
+      <!-- Profile links to https://vexoul.net/account by default; profile-href moves it, :profile-href="null" drops it. -->
+      <StoryFrame height="260px">
+        <div class="story-row" style="justify-content: flex-end">
+          <VxAccountMenu :user="{ name: 'vexouluna', color: '#9146FF' }" :profile-href="null" />
+        </div>
+      </StoryFrame>
+    </Variant>
     <Variant title="Connected: VxAccount">
       <!-- VxAccountMenu wired to useAccount(); here a fake vex-auth answers. -->
       <StoryFrame height="320px">
