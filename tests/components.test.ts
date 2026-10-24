@@ -10,6 +10,7 @@ import VxTable from '../src/components/data/VxTable.vue'
 import VxUptimeBar from '../src/components/data/VxUptimeBar.vue'
 import VxPopover from '../src/components/overlays/VxPopover.vue'
 import VxSiteHeader from '../src/components/chrome/VxSiteHeader.vue'
+import VxNavBar from '../src/components/chrome/VxNavBar.vue'
 import VxTooltip from '../src/components/overlays/VxTooltip.vue'
 import { useToast } from '../src/composables/useToast'
 
@@ -270,5 +271,17 @@ describe('VxSiteHeader', () => {
     expect(vods!.find('.vx-offsite').exists()).toBe(false)
     expect(live!.attributes('target')).toBe('_blank')
     expect(live!.get('.vx-offsite').text()).toBe('↗')
+  })
+})
+
+describe('VxNavBar', () => {
+  it('marks the current link for screen readers', () => {
+    const w = mount(VxNavBar, {
+      props: { label: 'Manage', links: [{ label: 'Me', href: '#me' }, { label: 'Audit', href: '#audit', current: true }] },
+    })
+    const [me, audit] = w.findAll('a')
+    expect(me!.attributes('aria-current')).toBeUndefined()
+    expect(audit!.attributes('aria-current')).toBe('page')
+    expect(w.get('nav').attributes('aria-label')).toBe('Manage')
   })
 })
