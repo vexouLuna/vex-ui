@@ -391,6 +391,18 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 .vx-status.is-warn .vx-status-dot { background: var(--vx-warn); }
 .vx-status.is-down .vx-status-dot { background: var(--vx-bad); }
 
+/* A status tile's left edge takes its status colour. */
+.vx-stat-tile { --vx-tile-tone: var(--vx-line); display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 16px; border-left: 3px solid var(--vx-tile-tone); }
+.vx-stat-tile.is-ok { --vx-tile-tone: var(--vx-ok); }
+.vx-stat-tile.is-warn { --vx-tile-tone: var(--vx-warn); }
+.vx-stat-tile.is-caution { --vx-tile-tone: var(--vx-caution); }
+.vx-stat-tile.is-down, .vx-stat-tile.is-live { --vx-tile-tone: var(--vx-bad); }
+.vx-stat-tile .vx-eyebrow { margin: 0; }
+.vx-stat-tile-main { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; }
+.vx-stat-tile-sub { font-size: 13px; }
+.vx-site .vx-stat-tile-link { margin-top: 2px; font-size: 13px; color: var(--vx-accent); }
+.vx-site .vx-stat-tile-link:hover { color: var(--vx-ink); }
+
 /* The gap shrinks with the bar so a hundred ticks still fit a phone. */
 .vx-uptime { position: relative; display: flex; align-items: stretch; gap: clamp(1px, 0.35%, 3px); }
 .vx-uptime-tick {
