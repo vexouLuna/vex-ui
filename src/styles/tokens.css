@@ -28,19 +28,23 @@
   --vx-accent: var(--vx-info);
 
   /* Glass panels and overlays */
-  /* Clear glass, picked in the lab's /design/glass (column F): no blur anywhere, so the stars stay sharp. A thin
-     tint, a faint sheen, a lit top edge and rim, and window reflections pinned to the screen. */
+  /* Clear glass, picked in the lab's /design/glass (column G: tint 15, line 14, edge 13, sheen 4, rim 10, streak 4):
+     no blur anywhere, so the stars stay sharp. A thin tint, a faint sheen, a lit top edge and rim, and window
+     reflections pinned to the screen that drift slowly by themselves. */
   --vx-glass: rgb(14 14 22 / 0.15);
-  --vx-glass-line: rgb(255 255 255 / 0.11);
+  --vx-glass-line: rgb(255 255 255 / 0.14);
   --vx-glass-clear: var(--vx-glass);
-  --vx-glass-sheen: linear-gradient(155deg, rgb(255 255 255 / 0.03), rgb(255 255 255 / 0.007) 38%, rgb(255 255 255 / 0) 60%, rgb(255 255 255 / 0.01));
-  --vx-glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.11);
+  --vx-glass-sheen: linear-gradient(155deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.009) 38%, rgb(255 255 255 / 0) 60%, rgb(255 255 255 / 0.013));
+  --vx-glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.13);
   /* A gradient border, lit from the top left (drawn by .vx-panel::after). */
-  --vx-glass-rim: linear-gradient(145deg, rgb(255 255 255 / 0.43), rgb(255 255 255 / 0.054) 35%, rgb(255 255 255 / 0) 60%, rgb(255 255 255 / 0.14));
+  --vx-glass-rim: linear-gradient(145deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.013) 35%, rgb(255 255 255 / 0) 60%, rgb(255 255 255 / 0.033));
   /* The page scroll, kept current by VxSiteShell; the reflection drifts at half of it. */
   --vx-scroll-y: 0px;
+  /* The reflection's own slow drift on top of that: one 3200px loop (the seamless tile) per this time, so 400s is
+     8px a second (lab: drift 8px/s). base.css animates --vx-glass-drift with it; reduced motion stops it. */
+  --vx-glass-drift-time: 400s;
   /* Window reflection strength: about the brightest band's opacity; each band is a fixed fraction of it. */
-  --vx-glass-streak: 0.03;
+  --vx-glass-streak: 0.04;
   /* Window reflections: 16 seeded bands per 1600px at 120deg (lab: bands 16, max width 55px, seed 15). At 120deg
      one period spans 3200px vertically, so .vx-panel tiles it 3200px tall and it loops without a seam. Copy a new
      set from the lab rather than editing these stops by hand. */
@@ -65,9 +69,10 @@
   /* The whole panel glass as one background value, for .vx-panel and for any stylesheet that wants the same look
      (vxp-panel, a theme's own panel class): `background: var(--vx-glass-panel)`. The shorthand carries each layer's
      position, size and attachment, so nothing has to be copied. The reflection is pinned to the screen, so it lines
-     up across panels, and drifts up at half the scroll speed (VxSiteShell sets --vx-scroll-y on <html>). */
+     up across panels, drifts up at half the scroll speed (VxSiteShell sets --vx-scroll-y on <html>) and slowly moves
+     on its own (--vx-glass-drift, animated on :root). */
   --vx-glass-panel:
-    var(--vx-glass-reflect) 0 calc(var(--vx-scroll-y, 0px) * -0.5) / 100% 3200px fixed,
+    var(--vx-glass-reflect) 0 calc(var(--vx-scroll-y, 0px) * -0.5 + var(--vx-glass-drift, 0px)) / 100% 3200px fixed,
     var(--vx-glass-sheen),
     var(--vx-glass-clear);
   /* Cuts a ::after down to its 1px padding ring, for the lit rim: `background: var(--vx-glass-rim); mask: var(...)`. */
