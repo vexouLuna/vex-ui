@@ -8,6 +8,7 @@ import VxPlaceholder from '../src/components/media/VxPlaceholder.vue'
 import VxStepper from '../src/components/controls/VxStepper.vue'
 import VxTable from '../src/components/data/VxTable.vue'
 import VxUptimeBar from '../src/components/data/VxUptimeBar.vue'
+import VxStatTile from '../src/components/data/VxStatTile.vue'
 import VxPopover from '../src/components/overlays/VxPopover.vue'
 import VxSiteHeader from '../src/components/chrome/VxSiteHeader.vue'
 import VxTooltip from '../src/components/overlays/VxTooltip.vue'
@@ -270,5 +271,15 @@ describe('VxSiteHeader', () => {
     expect(vods!.find('.vx-offsite').exists()).toBe(false)
     expect(live!.attributes('target')).toBe('_blank')
     expect(live!.get('.vx-offsite').text()).toBe('↗')
+  })
+})
+
+describe('VxStatTile', () => {
+  it('takes the status as its class and links on when given somewhere to go', () => {
+    const w = mount(VxStatTile, { props: { status: 'warn', headline: '2 waiting', href: '#up', linkLabel: 'Uploads' } })
+    expect(w.classes()).toContain('is-warn')
+    expect(w.get('a').attributes('href')).toBe('#up')
+    expect(w.text()).toContain('Uploads')
+    expect(mount(VxStatTile, { props: { headline: 'x' } }).find('a').exists()).toBe(false)
   })
 })
