@@ -449,9 +449,12 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 .vx-table .is-right { text-align: right; }
 .vx-table .is-mono { font-family: var(--vx-font-mono); }
 .vx-table .is-muted { color: var(--vx-muted); }
+.vx-table .is-nowrap { white-space: nowrap; }
 /* Narrow sites keep every column; the table scrolls sideways instead */
 @container vx-site (max-width: 700px) {
   .vx-table td, .vx-table th { white-space: nowrap; }
+  /* …except a column of prose (a reason, a note), which wraps at a readable width. */
+  .vx-table td.is-wrap, .vx-table th.is-wrap { white-space: normal; min-width: 24ch; }
 }
 
 /* ---------- Placeholder (every image, logo and icon until real assets exist) ---------- */

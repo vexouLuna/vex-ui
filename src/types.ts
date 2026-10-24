@@ -61,6 +61,11 @@ export interface TableColumn {
   mono?: boolean
   muted?: boolean
   width?: string
+  /** Keep the column on one line, or let it wrap even on narrow sites (where cells otherwise don't). */
+  nowrap?: boolean
+  wrap?: boolean
+  /** Extra class on the column's header and cells. */
+  class?: string
 }
 
 export interface SortState {
