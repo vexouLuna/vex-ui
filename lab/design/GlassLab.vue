@@ -12,7 +12,7 @@ const presets = {
   stripes: { name: 'D · Diagonal lines', tint: 12, line: 10, sheen: 0, edge: 10, stripes: 4, stripeW: 16, stripeGap: 26, angle: 135, streak: 0, rim: 0, bands: 14, bandW: 70, seed: 7, follow: 50, drift: 0 },
   rim: { name: 'E · Lit rim', tint: 10, line: 0, sheen: 3, edge: 0, stripes: 0, stripeW: 14, stripeGap: 22, angle: 135, streak: 0, rim: 40, bands: 14, bandW: 70, seed: 7, follow: 50, drift: 0 },
   reflect: { name: 'F · Window reflection', tint: 15, line: 11, sheen: 3, edge: 11, stripes: 0, stripeW: 9, stripeGap: 11, angle: 120, streak: 3, rim: 43, bands: 16, bandW: 55, seed: 15, follow: 50, drift: 0 },
-  picked: { name: 'G · F, picked + drift', tint: 15, line: 14, sheen: 4, edge: 13, stripes: 0, stripeW: 9, stripeGap: 11, angle: 120, streak: 4, rim: 10, bands: 16, bandW: 55, seed: 15, follow: 50, drift: 8 },
+  picked: { name: 'G · F, picked + drift', tint: 15, line: 14, sheen: 4, edge: 13, stripes: 0, stripeW: 9, stripeGap: 11, angle: 120, streak: 4, rim: 10, bands: 16, bandW: 55, seed: 15, follow: 50, drift: 5 },
 }
 const knobs = [
   ['tint', 'Darkness', 0, 80, '%'], ['line', 'Border', 0, 40, '%'], ['edge', 'Top highlight', 0, 40, '%'],

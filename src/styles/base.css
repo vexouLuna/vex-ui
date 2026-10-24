@@ -81,6 +81,8 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
 @property --vx-glass-drift { syntax: '<length>'; inherits: true; initial-value: 0px; }
 @keyframes vx-glass-drift { to { --vx-glass-drift: 3200px; } }
 :root { animation: vx-glass-drift var(--vx-glass-drift-time) linear infinite; }
+/* VxSiteShell sets this while the tab is hidden, so it resumes where it was. */
+:root[data-vx-hidden] { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) {
   :root { animation: none; }
 }

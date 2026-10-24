@@ -40,9 +40,9 @@
   --vx-glass-rim: linear-gradient(145deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.013) 35%, rgb(255 255 255 / 0) 60%, rgb(255 255 255 / 0.033));
   /* The page scroll, kept current by VxSiteShell; the reflection drifts at half of it. */
   --vx-scroll-y: 0px;
-  /* The reflection's own slow drift on top of that: one 3200px loop (the seamless tile) per this time, so 400s is
-     8px a second (lab: drift 8px/s). base.css animates --vx-glass-drift with it; reduced motion stops it. */
-  --vx-glass-drift-time: 400s;
+  /* The reflection's own slow drift on top of that: one 3200px loop (the seamless tile) per this time, so 640s is
+     5px a second (lab: drift 5px/s). base.css animates --vx-glass-drift with it; reduced motion stops it. */
+  --vx-glass-drift-time: 640s;
   /* Window reflection strength: about the brightest band's opacity; each band is a fixed fraction of it. */
   --vx-glass-streak: 0.04;
   /* Window reflections: 16 seeded bands per 1600px at 120deg (lab: bands 16, max width 55px, seed 15). At 120deg

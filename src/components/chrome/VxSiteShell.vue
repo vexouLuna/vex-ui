@@ -44,16 +44,22 @@ function onScroll() {
   cancelAnimationFrame(frame)
   frame = requestAnimationFrame(() => document.documentElement.style.setProperty('--vx-scroll-y', `${window.scrollY}px`))
 }
+// Pauses the reflection's drift (base.css) while the tab is hidden.
+const onVisibility = () => document.documentElement.toggleAttribute('data-vx-hidden', document.hidden)
 onMounted(() => {
   applyGlobal()
   if (!props.global) return
   window.addEventListener('scroll', onScroll, { passive: true })
+  document.addEventListener('visibilitychange', onVisibility)
   onScroll()
+  onVisibility()
 })
 watch(() => props.site, applyGlobal)
 onUnmounted(() => {
   if (props.global && document.documentElement.dataset.site === props.site) delete document.documentElement.dataset.site
   window.removeEventListener('scroll', onScroll)
+  document.removeEventListener('visibilitychange', onVisibility)
+  document.documentElement.removeAttribute('data-vx-hidden')
   cancelAnimationFrame(frame)
 })
 </script>
