@@ -396,6 +396,7 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
 @keyframes vx-shimmer { to { background-position: -200% 0; } }
 
 .vx-load-rows { display: flex; flex-direction: column; gap: 8px; }
+.vx-load-stale { margin-bottom: 16px; }
 .vx-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 28px 16px; }
 .vx-empty-title { font-weight: 700; }
 .vx-empty-text { font-size: 13px; color: var(--vx-muted); max-width: 32rem; }

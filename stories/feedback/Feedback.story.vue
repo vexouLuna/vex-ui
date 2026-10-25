@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { VxButton, VxCallout, VxEmptyState, VxLoadState, VxProgress, VxSkeleton, VxSpinner } from '../../src'
 import StoryFrame from '../StoryFrame.vue'
 
-const states = ['error', 'loading', 'empty', 'loaded'] as const
+const states = ['error', 'loading', 'empty', 'loaded', 'stale'] as const
 const state = ref<(typeof states)[number]>('error')
 </script>
 
@@ -51,14 +51,16 @@ const state = ref<(typeof states)[number]>('error')
       </StoryFrame>
     </Variant>
     <Variant title="Load state">
-      <!-- One wrapper for error + Try again, skeleton rows while loading, the empty state, then the content. -->
+      <!-- One wrapper for error + Try again, skeleton rows while loading, the empty state, then the content.
+           stale: a failed refresh keeps the older content, with a warning and Try again above it. -->
       <StoryFrame site="dtp">
         <div class="story-col" style="max-width: 640px">
           <div class="story-row">
             <VxButton v-for="s in states" :key="s" size="sm" :pressed="state === s" @click="state = s">{{ s }}</VxButton>
           </div>
           <VxLoadState
-            :error="state === 'error' ? new Error('502 from the bot API') : null"
+            :error="state === 'error' || state === 'stale' ? new Error('502 from the bot API') : null"
+            :stale="state === 'stale'"
             :loading="state === 'loading'"
             :empty="state === 'empty'"
             error-title="Couldn't load the replies"

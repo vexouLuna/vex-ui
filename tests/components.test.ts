@@ -370,6 +370,19 @@ describe('VxLoadState', () => {
     await w.setProps({ empty: false })
     expect(w.find('.c').exists()).toBe(true)
   })
+
+  it('keeps older content under a warning when a refresh fails with stale', async () => {
+    const w = mount(VxLoadState, { props: { error: new Error('502'), stale: true }, slots: { default: '<p class="c">data</p>' } })
+    expect(w.find('.c').exists()).toBe(true)
+    expect(w.get('.vx-callout').classes()).toContain('is-warn')
+    expect(w.text()).toContain("Couldn't refresh")
+    expect(w.text()).toContain('502')
+    await w.get('button').trigger('click')
+    expect(w.emitted('retry')).toHaveLength(1)
+    await w.setProps({ error: null })
+    expect(w.find('.vx-callout').exists()).toBe(false)
+    expect(w.find('.c').exists()).toBe(true)
+  })
 })
 
 describe('VxConfirm', () => {
