@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import VxButton from '../src/components/controls/VxButton.vue'
 import VxInput from '../src/components/controls/VxInput.vue'
+import VxSaveBar from '../src/components/controls/VxSaveBar.vue'
 import VxPagination from '../src/components/controls/VxPagination.vue'
 import VxPlaceholder from '../src/components/media/VxPlaceholder.vue'
 import VxStepper from '../src/components/controls/VxStepper.vue'
@@ -10,7 +11,11 @@ import VxTable from '../src/components/data/VxTable.vue'
 import VxUptimeBar from '../src/components/data/VxUptimeBar.vue'
 import VxStatTile from '../src/components/data/VxStatTile.vue'
 import VxPopover from '../src/components/overlays/VxPopover.vue'
+import VxConfirm from '../src/components/overlays/VxConfirm.vue'
+import VxLoadState from '../src/components/feedback/VxLoadState.vue'
+import VxAccountMenu from '../src/components/chrome/VxAccountMenu.vue'
 import VxSiteHeader from '../src/components/chrome/VxSiteHeader.vue'
+import VxNavBar from '../src/components/chrome/VxNavBar.vue'
 import VxTooltip from '../src/components/overlays/VxTooltip.vue'
 import { useToast } from '../src/composables/useToast'
 
@@ -109,6 +114,28 @@ describe('VxTable', () => {
   it('renders custom cells', () => {
     const w = mount(VxTable, { props: { columns, rows }, slots: { 'cell-len': '<b>{{ params.value }}s</b>' } })
     expect(w.find('tbody b').text()).toBe('10s')
+  })
+})
+
+describe('VxAccountMenu', () => {
+  const profile = () => [...document.body.querySelectorAll('a.vx-menu-item')].find((a) => a.textContent?.includes('Profile'))
+  const open = async (props: Record<string, unknown> = {}) => {
+    const w = mount(VxAccountMenu, { attachTo: document.body, props: { user: { name: 'vexouluna' }, ...props } })
+    await w.get('.vx-account-trigger').trigger('click')
+    await flushPromises()
+    return w
+  }
+
+  it('links Profile to the vexoul.net account page, or elsewhere, or leaves it out', async () => {
+    let w = await open()
+    expect(profile()?.getAttribute('href')).toBe('https://vexoul.net/account')
+    w.unmount()
+    w = await open({ profileHref: '/account' })
+    expect(profile()?.getAttribute('href')).toBe('/account')
+    w.unmount()
+    w = await open({ profileHref: null })
+    expect(profile()).toBeUndefined()
+    w.unmount()
   })
 })
 
@@ -281,5 +308,66 @@ describe('VxStatTile', () => {
     expect(w.get('a').attributes('href')).toBe('#up')
     expect(w.text()).toContain('Uploads')
     expect(mount(VxStatTile, { props: { headline: 'x' } }).find('a').exists()).toBe(false)
+  })
+})
+
+describe('VxNavBar', () => {
+  it('marks the current link for screen readers', () => {
+    const w = mount(VxNavBar, {
+      props: { label: 'Manage', links: [{ label: 'Me', href: '#me' }, { label: 'Audit', href: '#audit', current: true }] },
+    })
+    const [me, audit] = w.findAll('a')
+    expect(me!.attributes('aria-current')).toBeUndefined()
+    expect(audit!.attributes('aria-current')).toBe('page')
+    expect(w.get('nav').attributes('aria-label')).toBe('Manage')
+  })
+})
+
+describe('VxSaveBar', () => {
+  it('counts changes, emits undo and save, and blocks Save with nothing to save', async () => {
+    const w = mount(VxSaveBar, { props: { count: 2 } })
+    expect(w.text()).toContain('2 unsaved changes')
+    const [undo, save] = w.findAll('button')
+    await undo!.trigger('click')
+    await save!.trigger('click')
+    expect(w.emitted('undo')).toHaveLength(1)
+    expect(w.emitted('save')).toHaveLength(1)
+    await w.setProps({ count: 0 })
+    expect(w.text()).toContain('No changes')
+    expect(save!.attributes('disabled')).toBeDefined()
+  })
+})
+
+describe('VxLoadState', () => {
+  it('shows the error with Try again, then skeletons, then empty, then the content', async () => {
+    const w = mount(VxLoadState, { props: { error: new Error('boom') }, slots: { default: '<p class="c">data</p>' } })
+    expect(w.text()).toContain('boom')
+    await w.get('button').trigger('click')
+    expect(w.emitted('retry')).toHaveLength(1)
+    await w.setProps({ error: null, loading: true })
+    expect(w.find('[aria-busy="true"]').exists()).toBe(true)
+    await w.setProps({ loading: false, empty: true, emptyTitle: 'None' })
+    expect(w.text()).toContain('None')
+    await w.setProps({ empty: false })
+    expect(w.find('.c').exists()).toBe(true)
+  })
+})
+
+describe('VxConfirm', () => {
+  it('confirms only once the text is typed, and not while loading', async () => {
+    const w = mount(VxConfirm, { attachTo: document.body, props: { open: true, title: 'Delete?', confirmText: 'abc' } })
+    await flushPromises()
+    const confirm = () => [...document.body.querySelectorAll<HTMLButtonElement>('.vx-dialog button')].at(-1)!
+    expect(confirm().disabled).toBe(true)
+    const input = document.body.querySelector<HTMLInputElement>('.vx-dialog input')!
+    input.value = 'abc'
+    input.dispatchEvent(new Event('input'))
+    await nextTick()
+    confirm().click()
+    expect(w.emitted('confirm')).toHaveLength(1)
+    await w.setProps({ loading: true })
+    confirm().click()
+    expect(w.emitted('confirm')).toHaveLength(1)
+    w.unmount()
   })
 })

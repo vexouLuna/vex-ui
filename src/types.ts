@@ -14,8 +14,8 @@ export interface NavItem {
 
 export type Tone = 'info' | 'ok' | 'warn' | 'error'
 
-/** How a service is doing: up, degraded, down, or unknown / no data. */
-export type Health = 'ok' | 'warn' | 'down' | 'off'
+/** How a service is doing: up, degraded, mostly down (`caution`), down, or unknown / no data. */
+export type Health = 'ok' | 'warn' | 'caution' | 'down' | 'off'
 
 /** One tick of VxUptimeBar: a check, or an hour or day of them. */
 export interface UptimeTick {
@@ -45,6 +45,14 @@ export interface AccountUser {
   /** The user's Twitch chat colour, if they set one. */
   color?: string | null
   avatar?: string
+}
+
+/** A link in VxNavBar. `current` marks the page you're on. */
+export interface NavLink {
+  label: string
+  to?: string
+  href?: string
+  current?: boolean
 }
 
 export interface DatePreset {

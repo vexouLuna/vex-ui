@@ -28,7 +28,7 @@ const checks = (n: number, bad: (i: number) => Health | null): UptimeTick[] =>
   })
 const services = [
   { name: 'vexoul.net', ticks: checks(50, () => null) },
-  { name: 'vods', ticks: checks(50, (i) => (i >= 31 && i <= 34 ? 'down' : i === 40 ? 'warn' : null)) },
+  { name: 'vods', ticks: checks(50, (i) => (i >= 31 && i <= 34 ? 'down' : i === 40 ? 'warn' : i === 41 ? 'caution' : null)) },
   { name: 'dtp', ticks: checks(20, (i) => (i === 19 ? 'down' : null)) },
 ]
 const picked = ref<number | null>(33)
