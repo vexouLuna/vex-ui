@@ -18,6 +18,18 @@ const rows = [
   { id: 2, title: 'doom eternal nightmare any%', date: '2026-09-21', games: 'DOOM Eternal', length: '5:12:40', status: 'processing' },
   { id: 3, title: 'community game night', date: '2026-09-10', games: 'Jackbox, Among Us', length: '2:55:30', status: 'missing part' },
 ]
+// doomtp's ignored-users table: a composite key, a prose column that wraps, an unlabelled actions column.
+const ignoredColumns = [
+  { key: 'user', label: 'User' },
+  { key: 'by', label: 'Ignored by' },
+  { key: 'when', label: 'When', muted: true, nowrap: true },
+  { key: 'reason', label: 'Reason', muted: true, wrap: true },
+  { key: 'actions', label: '', align: 'right' as const, nowrap: true },
+]
+const ignored = ref([
+  { userId: '1201', everywhere: false, user: '@spambot_9000', by: '@vexouluna', when: '3 h ago', reason: 'posting the same link in every chat for two days', self: false },
+  { userId: '88', everywhere: true, user: '@quietviewer', by: 'themselves', when: '2026-09-02', reason: '', self: true },
+])
 const filters = ref(['DOOM Eternal'])
 // Fifty one-minute checks: a short outage, one slow check, and a newer service with only twenty.
 const checks = (n: number, bad: (i: number) => Health | null): UptimeTick[] =>
@@ -48,6 +60,27 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
           </template>
         </VxTable>
         <p class="story-note">narrow sites keep every column; the table scrolls sideways</p>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Table: custom header, key, empty">
+      <StoryFrame site="dtp">
+        <VxTable
+          :columns="ignoredColumns"
+          :rows="ignored"
+          :row-key="(u) => `${u.everywhere}${u.userId}`"
+          :row-class="(u) => ({ 'is-muted': !!u.self })"
+          label="Ignored users"
+        >
+          <template #head-actions><span class="story-note">actions</span></template>
+          <template #cell-by="{ row, value }">
+            <VxChip v-if="row.self" tone="accent">{{ value }}</VxChip>
+            <span v-else>{{ value }}</span>
+          </template>
+          <template #cell-actions="{ row }">
+            <VxButton size="sm" variant="ghost" @click="ignored = ignored.filter((u) => u !== row)">Unignore</VxButton>
+          </template>
+          <template #empty>Nobody is ignored here.</template>
+        </VxTable>
       </StoryFrame>
     </Variant>
     <Variant title="Chips & status">

@@ -115,6 +115,25 @@ describe('VxTable', () => {
     const w = mount(VxTable, { props: { columns, rows }, slots: { 'cell-len': '<b>{{ params.value }}s</b>' } })
     expect(w.find('tbody b').text()).toBe('10s')
   })
+
+  it('takes custom headers, keys, row and column classes, and an empty slot', () => {
+    const cols = [{ key: 'title', label: 'Title', class: 'end', wrap: true }, { key: 'len', label: '' }]
+    const w = mount(VxTable, {
+      props: {
+        columns: cols,
+        rows,
+        rowKey: (r: Record<string, unknown>) => `${r.title}/${r.len}`,
+        rowClass: (r: Record<string, unknown>) => ({ long: Number(r.len) > 50 }),
+      },
+      slots: { 'head-len': '<span class="sr">Actions</span>', 'cell-title': '<i>{{ params.index }}</i>' },
+    })
+    expect(w.get('th .sr').text()).toBe('Actions')
+    expect(w.get('th').classes()).toEqual(expect.arrayContaining(['end', 'is-wrap']))
+    expect(w.findAll('tbody tr').map((r) => r.classes('long'))).toEqual([false, false, true])
+    expect(w.findAll('tbody i').map((i) => i.text())).toEqual(['0', '1', '2'])
+    const none = mount(VxTable, { props: { columns: cols, rows: [] }, slots: { empty: 'Nobody is ignored here.' } })
+    expect(none.get('td').text()).toBe('Nobody is ignored here.')
+  })
 })
 
 describe('VxAccountMenu', () => {
