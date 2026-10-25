@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // "Are you sure?" on VxDialog: what happens in the body, Cancel and the confirming button. It stays open while
 // `loading` (the page closes it when the work is done), and can't be dismissed then. `confirmText` asks for that
-// text to be typed first (a name or id), for what can't be undone.
+// text to be typed first (a name or id), for what can't be undone; `confirmIgnoreCase` accepts it in any case (a login).
 //   <VxConfirm v-model:open="del" title="Delete this VOD?" confirm-label="Delete" tone="danger" :confirm-text="vod.id"
 //     :loading="busy" @confirm="remove">Removes it with its chat. This can't be undone.</VxConfirm>
 import { computed, ref, useId, watch } from 'vue'
@@ -18,16 +18,19 @@ const props = withDefaults(
     loading?: boolean
     /** Text to type before confirming. */
     confirmText?: string
+    /** Accept the typed text in any case. */
+    confirmIgnoreCase?: boolean
     width?: string
   }>(),
-  { confirmLabel: 'Confirm', cancelLabel: 'Cancel', tone: 'default', loading: false, width: '420px' },
+  { confirmLabel: 'Confirm', cancelLabel: 'Cancel', tone: 'default', loading: false, confirmIgnoreCase: false, width: '420px' },
 )
 const open = defineModel<boolean>('open', { default: false })
 const emit = defineEmits<{ confirm: [] }>()
 const typed = ref('')
 const id = useId()
 watch(open, () => (typed.value = ''))
-const ready = computed(() => !props.confirmText || typed.value.trim() === props.confirmText)
+const same = (a: string, b: string) => (props.confirmIgnoreCase ? a.toLowerCase() === b.toLowerCase() : a === b)
+const ready = computed(() => !props.confirmText || same(typed.value.trim(), props.confirmText))
 
 function confirm() {
   if (ready.value && !props.loading) emit('confirm')

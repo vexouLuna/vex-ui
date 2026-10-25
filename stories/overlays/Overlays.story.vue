@@ -6,6 +6,7 @@ import StoryFrame from '../StoryFrame.vue'
 const dialog = ref(false)
 const confirm = ref(false)
 const typed = ref(false)
+const forget = ref(false)
 const busy = ref(false)
 function slowDelete() {
   busy.value = true
@@ -65,6 +66,7 @@ const chapters = Array.from({ length: 24 }, (_, i) => ({ name: `Chapter ${i + 1}
         <div class="story-row">
           <VxButton @click="confirm = true">Rejoin channel…</VxButton>
           <VxButton variant="danger" @click="typed = true">Delete VOD…</VxButton>
+          <VxButton variant="danger" @click="forget = true">Forget me…</VxButton>
         </div>
         <VxConfirm v-model:open="confirm" title="Rejoin #somechannel?" confirm-label="Rejoin" @confirm="confirm = false; show('Rejoined')">
           The bot joins the chat again and replies straight away.
@@ -78,6 +80,16 @@ const chapters = Array.from({ length: 24 }, (_, i) => ({ name: `Chapter ${i + 1}
           :loading="busy"
           @confirm="slowDelete"
         >Removes the VOD with its chat and emotes. The YouTube videos stay. This can't be undone.</VxConfirm>
+        <!-- confirm-ignore-case: the login is accepted in any case. -->
+        <VxConfirm
+          v-model:open="forget"
+          title="Forget me?"
+          confirm-label="Forget me"
+          tone="danger"
+          confirm-text="SomeViewer"
+          confirm-ignore-case
+          @confirm="forget = false; show('Forgotten')"
+        >This deletes your account here for good. It can't be undone.</VxConfirm>
       </StoryFrame>
     </Variant>
     <Variant title="Toast">

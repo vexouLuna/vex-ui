@@ -389,4 +389,18 @@ describe('VxConfirm', () => {
     expect(w.emitted('confirm')).toHaveLength(1)
     w.unmount()
   })
+
+  it('takes the text in any case with confirmIgnoreCase', async () => {
+    const w = mount(VxConfirm, { attachTo: document.body, props: { open: true, title: 'Forget me?', confirmText: 'Alice' } })
+    await flushPromises()
+    const confirm = () => [...document.body.querySelectorAll<HTMLButtonElement>('.vx-dialog button')].at(-1)!
+    const input = document.body.querySelector<HTMLInputElement>('.vx-dialog input')!
+    input.value = 'aLICE '
+    input.dispatchEvent(new Event('input'))
+    await nextTick()
+    expect(confirm().disabled).toBe(true)
+    await w.setProps({ confirmIgnoreCase: true })
+    expect(confirm().disabled).toBe(false)
+    w.unmount()
+  })
 })
