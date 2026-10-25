@@ -640,6 +640,40 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 .vx-site-item-what { font-size: 12px; color: var(--vx-muted); }
 .vx-here { font-family: var(--vx-font-mono); font-size: 10px; color: var(--vx-muted); border: 1px solid var(--vx-line); border-radius: 999px; padding: 0 6px; }
 
+/* ---------- Section nav, page head ---------- */
+.vx-navbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 12px; margin: 0 0 20px; }
+.vx-navbar-title { margin: 0; }
+.vx-navbar-links { display: flex; flex-wrap: wrap; gap: 2px; }
+.vx-navbar .vx-navbar-link {
+  display: inline-flex;
+  align-items: center;
+  height: var(--vx-ctl-sm);
+  padding: 0 10px;
+  border-radius: var(--vx-radius-sm);
+  color: var(--vx-muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+.vx-navbar .vx-navbar-link:hover { color: var(--vx-ink); background: var(--vx-hover); }
+.vx-navbar .vx-navbar-link.is-current { color: var(--vx-accent); background: var(--vx-hover); }
+.vx-navbar-link:focus-visible { outline: 2px solid var(--vx-ring); outline-offset: 1px; }
+.vx-navbar-trail { margin-left: auto; min-width: 0; max-width: 100%; font-size: 12px; color: var(--vx-muted); }
+
+.vx-pagehead { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 16px; margin-bottom: 20px; }
+.vx-pagehead > .vx-eyebrow, .vx-pagehead-text { flex-basis: 100%; }
+.vx-pagehead-title { flex: 1 1 auto; margin: 0; font-size: 28px; overflow-wrap: anywhere; }
+.vx-pagehead-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.vx-pagehead-text { font-size: 14px; }
+
+/* Label / value pairs (<dl class="vx-facts"><div><dt>…</dt><dd>…</dd></div>…</dl>): a grid of small facts, label
+   over value. .is-inline puts each label beside its value, in a wrapping row. */
+.vx-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px 16px; margin: 0; }
+.vx-facts dt { font-family: var(--vx-font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--vx-muted); margin-bottom: 2px; }
+.vx-facts dd { margin: 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; overflow-wrap: anywhere; }
+.vx-facts.is-inline { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.vx-facts.is-inline > div { display: flex; align-items: baseline; gap: 8px; }
+.vx-facts.is-inline dt { margin: 0; }
+
 /* ---------- Account ---------- */
 .vx-account-trigger {
   display: flex;

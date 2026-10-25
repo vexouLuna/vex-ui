@@ -47,6 +47,14 @@ export interface AccountUser {
   avatar?: string
 }
 
+/** A link in VxNavBar. `current` marks the page you're on. */
+export interface NavLink {
+  label: string
+  to?: string
+  href?: string
+  current?: boolean
+}
+
 export interface DatePreset {
   label: string
   /** Days back from today; 0 clears both ends, -1 means "this year". */
