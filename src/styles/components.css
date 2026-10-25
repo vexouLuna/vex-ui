@@ -70,6 +70,8 @@
   border-radius: var(--vx-radius-sm);
 }
 .vx-input::placeholder { color: var(--vx-muted); }
+/* After .vx-input's `font: inherit`, which would otherwise undo it (VxInput/VxTextarea `mono`). */
+.vx-input.vx-mono { font-family: var(--vx-font-mono); }
 .vx-input:focus { outline: 1px solid var(--vx-accent); outline-offset: 1px; }
 .vx-input.is-invalid { border-color: var(--vx-bad); }
 textarea.vx-input { height: auto; padding: 8px 10px; resize: vertical; line-height: 1.5; }
@@ -136,6 +138,22 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
 .vx-stepper { display: inline-flex; align-items: center; gap: 4px; }
 .vx-stepper .vx-input { width: 72px; text-align: center; font-family: var(--vx-font-mono); }
 .vx-stepper.is-sm .vx-input { width: 64px; height: var(--vx-ctl-sm); font-size: 12px; padding: 0 4px; }
+
+/* Sticks to the bottom of the screen; lit with the accent while there are unsaved changes. */
+.vx-savebar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+.vx-savebar.is-on { box-shadow: 0 0 0 1px var(--vx-accent), var(--vx-shadow); }
+.vx-savebar-error { flex-basis: 100%; }
+.vx-savebar-gap { flex: 1; }
 
 .vx-date-range { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .vx-date-range-row { display: flex; align-items: center; gap: 8px; min-width: 0; }

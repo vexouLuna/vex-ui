@@ -20,6 +20,8 @@ export { default as VxToc } from './components/chrome/VxToc.vue'
 // Controls
 export { default as VxButton } from './components/controls/VxButton.vue'
 export { default as VxInput } from './components/controls/VxInput.vue'
+export { default as VxTextarea } from './components/controls/VxTextarea.vue'
+export { default as VxSaveBar } from './components/controls/VxSaveBar.vue'
 export { default as VxField } from './components/controls/VxField.vue'
 export { default as VxSelect } from './components/controls/VxSelect.vue'
 export { default as VxStepper } from './components/controls/VxStepper.vue'

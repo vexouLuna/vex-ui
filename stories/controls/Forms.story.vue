@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
-import { VxButton, VxCheckbox, VxDateInput, VxDateRange, VxField, VxInput, VxRadioGroup, VxSelect, VxSlider, VxStepper, VxSwitch } from '../../src'
+import { VxButton, VxCheckbox, VxDateInput, VxDateRange, VxSaveBar, VxTextarea, VxField, VxInput, VxRadioGroup, VxSelect, VxSlider, VxStepper, VxSwitch } from '../../src'
 import StoryFrame from '../StoryFrame.vue'
 
 const f = reactive({
   name: 'vexouluna', search: '', delay: 1.5, sort: 'new', check: true, radio: 'all', sw: true, sw2: false, vol: 40,
-  from: '2026-09-01', to: '2026-09-24', day: '2026-10-23', at: '2026-10-23T14:05', due: '',
+  from: '2026-09-01', to: '2026-09-24', note: 'Live most weeknights from 8pm.', saved: 'Live most weeknights from 8pm.', day: '2026-10-23', at: '2026-10-23T14:05', due: '',
 })
 const nameErr = computed(() => (f.name.length < 3 ? 'At least 3 characters.' : ''))
 const sorts = [
@@ -84,6 +84,24 @@ const sorts = [
           <VxDateRange v-model:from="f.from" v-model:to="f.to" />
           <code class="story-note">{{ f.from || '…' }} → {{ f.to || '…' }}</code>
         </div>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Textarea and save bar">
+      <!-- VxSaveBar sticks to the bottom of the screen under a long form and lights up with unsaved changes. -->
+      <StoryFrame>
+        <form class="story-col" style="max-width: 560px" @submit.prevent="f.saved = f.note">
+          <VxField v-slot="{ id }" label="About" help="Shown on the channel page.">
+            <VxTextarea :id="id" v-model="f.note" :invalid="f.note.length > 200" maxlength="240" />
+          </VxField>
+          <VxField v-slot="{ id }" label="Command (mono)"><VxTextarea :id="id" model-value="!so {user}" mono :rows="2" /></VxField>
+          <VxSaveBar
+            :count="f.note === f.saved ? 0 : 1"
+            :blocked="f.note.length > 200"
+            submit
+            @undo="f.note = f.saved"
+          />
+          <VxSaveBar :count="3" error="The bot API answered 502." />
+        </form>
       </StoryFrame>
     </Variant>
     <Variant title="Date and date-time input">
