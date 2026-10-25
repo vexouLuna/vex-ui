@@ -2,7 +2,7 @@
 // Small mono label. `tone` colours it; `live` is the red LIVE badge; with `clickable` it's a filter toggle.
 withDefaults(
   defineProps<{
-    tone?: 'default' | 'accent' | 'ok' | 'warn' | 'bad'
+    tone?: 'default' | 'accent' | 'ok' | 'warn' | 'caution' | 'bad'
     live?: boolean
     /** Filter chip: a button, highlighted when active. */
     clickable?: boolean

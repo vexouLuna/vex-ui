@@ -14,8 +14,8 @@ export interface NavItem {
 
 export type Tone = 'info' | 'ok' | 'warn' | 'error'
 
-/** How a service is doing: up, degraded, down, or unknown / no data. */
-export type Health = 'ok' | 'warn' | 'down' | 'off'
+/** How a service is doing: up, degraded, mostly down (`caution`), down, or unknown / no data. */
+export type Health = 'ok' | 'warn' | 'caution' | 'down' | 'off'
 
 /** One tick of VxUptimeBar: a check, or an hour or day of them. */
 export interface UptimeTick {
@@ -47,6 +47,14 @@ export interface AccountUser {
   avatar?: string
 }
 
+/** A link in VxNavBar. `current` marks the page you're on. */
+export interface NavLink {
+  label: string
+  to?: string
+  href?: string
+  current?: boolean
+}
+
 export interface DatePreset {
   label: string
   /** Days back from today; 0 clears both ends, -1 means "this year". */
@@ -61,6 +69,11 @@ export interface TableColumn {
   mono?: boolean
   muted?: boolean
   width?: string
+  /** Keep the column on one line, or let it wrap even on narrow sites (where cells otherwise don't). */
+  nowrap?: boolean
+  wrap?: boolean
+  /** Extra class on the column's header and cells. */
+  class?: string
 }
 
 export interface SortState {

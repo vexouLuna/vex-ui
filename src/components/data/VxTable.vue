@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="Row extends Record<string, unknown>">
 // Data table. On narrow sites every column stays and the table scrolls sideways (never hide columns).
-// Custom cells: <template #cell-status="{ row, value }">. Sorting is local unless `manual` is set,
-// in which case the page sorts (e.g. on the server) from v-model:sort.
+// Custom cells: <template #cell-status="{ row, value, index }">, custom headers: #head-status, and #empty for the
+// no-rows line. Sorting is local unless `manual` is set, in which case the page sorts (e.g. on the server) from
+// v-model:sort. `rowKey` is a field name or a function (for keys made of several fields); `rowClass` marks rows.
 import { computed } from 'vue'
 import type { SortState, TableColumn } from '../../types'
 
@@ -9,7 +10,8 @@ const props = withDefaults(
   defineProps<{
     columns: TableColumn[]
     rows: Row[]
-    rowKey?: keyof Row & string
+    rowKey?: (keyof Row & string) | ((row: Row) => string | number)
+    rowClass?: (row: Row) => string | Record<string, boolean> | undefined
     manual?: boolean
     empty?: string
     label?: string
@@ -38,8 +40,12 @@ function toggle(c: TableColumn) {
 }
 const ariaSort = (c: TableColumn) =>
   !c.sortable ? undefined : sort.value?.key === c.key ? (sort.value.dir === 'asc' ? 'ascending' : 'descending') : 'none'
-const cellClass = (c: TableColumn) => ({ 'is-right': c.align === 'right', 'is-mono': c.mono, 'is-muted': c.muted })
-const keyOf = (row: Row, i: number) => (props.rowKey ? String(row[props.rowKey]) : i)
+const cellClass = (c: TableColumn) => [
+  c.class,
+  { 'is-right': c.align === 'right', 'is-mono': c.mono, 'is-muted': c.muted, 'is-nowrap': c.nowrap, 'is-wrap': c.wrap },
+]
+const keyOf = (row: Row, i: number) =>
+  typeof props.rowKey === 'function' ? props.rowKey(row) : props.rowKey ? String(row[props.rowKey]) : i
 </script>
 
 <template>
@@ -57,17 +63,17 @@ const keyOf = (row: Row, i: number) => (props.rowKey ? String(row[props.rowKey])
             scope="col"
             @click="toggle(c)"
             @keydown.enter.space.prevent="toggle(c)"
-          >{{ c.label }}</th>
+          ><slot :name="`head-${c.key}`" :column="c">{{ c.label }}</slot></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, i) in sorted" :key="keyOf(row, i)">
+        <tr v-for="(row, i) in sorted" :key="keyOf(row, i)" :class="rowClass?.(row)">
           <td v-for="c in columns" :key="c.key" :class="cellClass(c)">
-            <slot :name="`cell-${c.key}`" :row="row" :value="row[c.key]">{{ row[c.key] }}</slot>
+            <slot :name="`cell-${c.key}`" :row="row" :value="row[c.key]" :index="i">{{ row[c.key] }}</slot>
           </td>
         </tr>
         <tr v-if="!rows.length">
-          <td :colspan="columns.length" class="is-muted">{{ empty }}</td>
+          <td :colspan="columns.length" class="is-muted"><slot name="empty">{{ empty }}</slot></td>
         </tr>
       </tbody>
     </table>

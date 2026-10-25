@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VxAvatar, VxButton, VxChip, VxStatusDot, VxTable, VxUptimeBar } from '../../src'
+import { VxAvatar, VxButton, VxChip, VxStatTile, VxStatusDot, VxTable, VxUptimeBar } from '../../src'
 import type { Health, SortState, UptimeTick } from '../../src'
 import StoryFrame from '../StoryFrame.vue'
 
@@ -18,6 +18,18 @@ const rows = [
   { id: 2, title: 'doom eternal nightmare any%', date: '2026-09-21', games: 'DOOM Eternal', length: '5:12:40', status: 'processing' },
   { id: 3, title: 'community game night', date: '2026-09-10', games: 'Jackbox, Among Us', length: '2:55:30', status: 'missing part' },
 ]
+// doomtp's ignored-users table: a composite key, a prose column that wraps, an unlabelled actions column.
+const ignoredColumns = [
+  { key: 'user', label: 'User' },
+  { key: 'by', label: 'Ignored by' },
+  { key: 'when', label: 'When', muted: true, nowrap: true },
+  { key: 'reason', label: 'Reason', muted: true, wrap: true },
+  { key: 'actions', label: '', align: 'right' as const, nowrap: true },
+]
+const ignored = ref([
+  { userId: '1201', everywhere: false, user: '@spambot_9000', by: '@vexouluna', when: '3 h ago', reason: 'posting the same link in every chat for two days', self: false },
+  { userId: '88', everywhere: true, user: '@quietviewer', by: 'themselves', when: '2026-09-02', reason: '', self: true },
+])
 const filters = ref(['DOOM Eternal'])
 // Fifty one-minute checks: a short outage, one slow check, and a newer service with only twenty.
 const checks = (n: number, bad: (i: number) => Health | null): UptimeTick[] =>
@@ -28,7 +40,7 @@ const checks = (n: number, bad: (i: number) => Health | null): UptimeTick[] =>
   })
 const services = [
   { name: 'vexoul.net', ticks: checks(50, () => null) },
-  { name: 'vods', ticks: checks(50, (i) => (i >= 31 && i <= 34 ? 'down' : i === 40 ? 'warn' : null)) },
+  { name: 'vods', ticks: checks(50, (i) => (i >= 31 && i <= 34 ? 'down' : i === 40 ? 'warn' : i === 41 ? 'caution' : null)) },
   { name: 'dtp', ticks: checks(20, (i) => (i === 19 ? 'down' : null)) },
 ]
 const picked = ref<number | null>(33)
@@ -48,6 +60,27 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
           </template>
         </VxTable>
         <p class="story-note">narrow sites keep every column; the table scrolls sideways</p>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Table: custom header, key, empty">
+      <StoryFrame site="dtp">
+        <VxTable
+          :columns="ignoredColumns"
+          :rows="ignored"
+          :row-key="(u) => `${u.everywhere}${u.userId}`"
+          :row-class="(u) => ({ 'is-muted': !!u.self })"
+          label="Ignored users"
+        >
+          <template #head-actions><span class="story-note">actions</span></template>
+          <template #cell-by="{ row, value }">
+            <VxChip v-if="row.self" tone="accent">{{ value }}</VxChip>
+            <span v-else>{{ value }}</span>
+          </template>
+          <template #cell-actions="{ row }">
+            <VxButton size="sm" variant="ghost" @click="ignored = ignored.filter((u) => u !== row)">Unignore</VxButton>
+          </template>
+          <template #empty>Nobody is ignored here.</template>
+        </VxTable>
       </StoryFrame>
     </Variant>
     <Variant title="Chips & status">
@@ -84,6 +117,20 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
           </div>
           <VxUptimeBar v-model:selected="picked" :ticks="services[1]!.ticks" selectable :height="36" label="vods, selectable" />
           <p class="story-note">selected: {{ picked === null ? 'none' : services[1]!.ticks[picked]!.label }} · tap a tick, or arrow keys</p>
+        </div>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Status tile">
+      <!-- The left edge takes the status colour; extra controls go in the default slot. -->
+      <StoryFrame>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px">
+          <VxStatTile label="Recorder" status="live" headline="Recording" sub="started 1:02:44 ago" href="#rec" />
+          <VxStatTile label="Services" status="ok" headline="4 of 4 up" sub="checked 12s ago" href="#svc" link-label="Status page" />
+          <VxStatTile label="YouTube uploads" status="warn" headline="2 waiting" sub="quota resets in 3 h" />
+          <VxStatTile label="Twitch (ad-free)" status="down" headline="Not linked" sub="recordings may show ads">
+            <VxButton size="sm">Link Twitch account</VxButton>
+          </VxStatTile>
+          <VxStatTile label="Chat logger" headline="No data" sub="never reported" />
         </div>
       </StoryFrame>
     </Variant>

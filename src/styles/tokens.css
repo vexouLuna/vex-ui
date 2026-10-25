@@ -20,6 +20,8 @@
   --vx-line: #26262c;
   --vx-ok: #8fd694;
   --vx-warn: #e8c35a;
+  /* Amber between warn and bad: worse than degraded, not yet down (e.g. a service down most of an hour). */
+  --vx-caution: #f2994a;
   --vx-bad: #ff6b5e;
   --vx-ring: #fff;
   /* Each site's accent comes from its entry in src/sites.ts (--vx-accent-<id>, switched by data-site); this is the
