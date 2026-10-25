@@ -5,7 +5,7 @@
 import { useAccount } from '../../account'
 import VxAccountMenu from './VxAccountMenu.vue'
 
-defineProps<{ note?: string }>()
+defineProps<{ note?: string; profileHref?: string | null }>()
 const account = useAccount()
 </script>
 
@@ -14,7 +14,7 @@ const account = useAccount()
     :user="account.menuUser.value"
     :disabled="!account.enabled"
     :checking="account.enabled && !account.ready.value"
-    v-bind="note === undefined ? {} : { note }"
+    v-bind="{ ...(note === undefined ? {} : { note }), ...(profileHref === undefined ? {} : { profileHref }) }"
     @sign-in="account.signIn()"
     @sign-out="account.signOut({ everywhere: true })"
   >
