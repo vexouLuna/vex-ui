@@ -1,5 +1,17 @@
 # @vex/ui
 
+## 0.30.0
+
+### Minor Changes
+
+- 4022e11: VxConfirm: `confirmIgnoreCase` accepts the typed `confirmText` in any case (a Twitch login, say).
+- ba42f6a: VxLoadState: `stale` keeps the content when a refresh fails, with a warning and Try again above it (`staleTitle`, default "Couldn't refresh, showing older data").
+- bbd0b21: VxStatusDot: `size="lg"` for the dot beside a page title, a 14px dot with the label at the heading's size.
+
+### Patch Changes
+
+- e7f04bd: VxTable: the row type takes interfaces as well as type aliases (`Row extends object`).
+
 ## 0.29.0
 
 ### Minor Changes
