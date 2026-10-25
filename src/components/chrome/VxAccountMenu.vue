@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // Account control: always exactly one control-height tall, signed in or out, so the header never changes size.
-// Signed out: a panel-styled "Sign in" button (icon-only on narrow sites). Signed in: an avatar opening a menu.
-// The menu's items come from the site through the default slot.
+// Signed out: a panel-styled "Sign in" button (icon-only on narrow sites). Signed in: the user's name and avatar
+// opening a menu (avatar only on narrow sites).
+// The menu starts with Profile (the account page on vexoul.net); the site's own items come through the default slot.
 import { computed } from 'vue'
 import type { AccountUser } from '../../types'
 import { twitchColor } from '../../utils/color'
@@ -19,8 +20,10 @@ const props = withDefaults(
     /** The account is still being checked: Sign in is greyed out until it's known. */
     checking?: boolean
     note?: string
+    /** Where Profile goes; `null` leaves it out (e.g. on the account page itself). */
+    profileHref?: string | null
   }>(),
-  { user: null, disabled: false, checking: false, note: 'signed in on all *.vexoul.net' },
+  { user: null, disabled: false, checking: false, note: 'signed in on all *.vexoul.net', profileHref: 'https://vexoul.net/account' },
 )
 const emit = defineEmits<{ signIn: []; signOut: [] }>()
 const nameColor = computed(() => (props.user ? twitchColor(props.user.name, props.user.color) : undefined))
@@ -48,8 +51,11 @@ const nameColor = computed(() => (props.user ? twitchColor(props.user.name, prop
         :aria-label="`Account: ${user.name}`"
         @click="toggle"
       >
-        <img v-if="user.avatar" :src="user.avatar" alt="" style="width: 100%; height: 100%; border-radius: 50%" />
-        <VxPlaceholder v-else label="pfp" w="100%" h="100%" round />
+        <span class="vx-account-trigger-name">{{ user.name }}</span>
+        <span class="vx-account-pfp">
+          <img v-if="user.avatar" :src="user.avatar" alt="" style="width: 100%; height: 100%; border-radius: 50%" />
+          <VxPlaceholder v-else label="pfp" w="100%" h="100%" round />
+        </span>
       </button>
     </template>
     <template #default="{ close }">
@@ -61,6 +67,7 @@ const nameColor = computed(() => (props.user ? twitchColor(props.user.name, prop
           <div class="vx-muted vx-mono" style="font-size: 11px">{{ note }}</div>
         </div>
       </div>
+      <VxMenuItem v-if="profileHref" :href="profileHref" @click="close()">Profile</VxMenuItem>
       <slot :close="close"></slot>
       <VxMenuSeparator />
       <VxMenuItem danger @click="emit('signOut'); close()">Sign out</VxMenuItem>

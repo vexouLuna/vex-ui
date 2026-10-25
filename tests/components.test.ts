@@ -11,6 +11,7 @@ import VxUptimeBar from '../src/components/data/VxUptimeBar.vue'
 import VxPopover from '../src/components/overlays/VxPopover.vue'
 import VxConfirm from '../src/components/overlays/VxConfirm.vue'
 import VxLoadState from '../src/components/feedback/VxLoadState.vue'
+import VxAccountMenu from '../src/components/chrome/VxAccountMenu.vue'
 import VxSiteHeader from '../src/components/chrome/VxSiteHeader.vue'
 import VxTooltip from '../src/components/overlays/VxTooltip.vue'
 import { useToast } from '../src/composables/useToast'
@@ -110,6 +111,28 @@ describe('VxTable', () => {
   it('renders custom cells', () => {
     const w = mount(VxTable, { props: { columns, rows }, slots: { 'cell-len': '<b>{{ params.value }}s</b>' } })
     expect(w.find('tbody b').text()).toBe('10s')
+  })
+})
+
+describe('VxAccountMenu', () => {
+  const profile = () => [...document.body.querySelectorAll('a.vx-menu-item')].find((a) => a.textContent?.includes('Profile'))
+  const open = async (props: Record<string, unknown> = {}) => {
+    const w = mount(VxAccountMenu, { attachTo: document.body, props: { user: { name: 'vexouluna' }, ...props } })
+    await w.get('.vx-account-trigger').trigger('click')
+    await flushPromises()
+    return w
+  }
+
+  it('links Profile to the vexoul.net account page, or elsewhere, or leaves it out', async () => {
+    let w = await open()
+    expect(profile()?.getAttribute('href')).toBe('https://vexoul.net/account')
+    w.unmount()
+    w = await open({ profileHref: '/account' })
+    expect(profile()?.getAttribute('href')).toBe('/account')
+    w.unmount()
+    w = await open({ profileHref: null })
+    expect(profile()).toBeUndefined()
+    w.unmount()
   })
 })
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// A service's recent history as a row of ticks, oldest on the left: green up, yellow degraded, red down, grey no
-// data. A tick can be one check or an hour or a day of them; its label says which.
-// `slots` fixes the number of ticks (the row is padded with empty ones on the left), so bars stacked in a list
+// A service's recent history as a row of ticks, oldest on the left: green up, yellow degraded, amber mostly down
+// (still counted as up), red down, grey no data. A tick can be one check or an hour or a day of them; its label
+// says which. `slots` fixes the number of ticks (the row is padded with empty ones on the left), so bars stacked in a list
 // line up even when one service has less history. Hovering or focusing a tick shows its label above it.
 // `selectable` makes the ticks buttons and `v-model:selected` the chosen one's index, so a page can show that
 // check in full; touch screens never see a hover, so anything more than the label belongs there.

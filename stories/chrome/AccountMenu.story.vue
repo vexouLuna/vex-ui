@@ -30,6 +30,29 @@ import FakeAccount from './FakeAccount.vue'
         </div>
       </StoryFrame>
     </Variant>
+    <Variant title="Signed in: on the account page">
+      <!-- Profile links to https://vexoul.net/account by default; profile-href moves it, :profile-href="null" drops it. -->
+      <StoryFrame height="260px">
+        <div class="story-row" style="justify-content: flex-end">
+          <VxAccountMenu :user="{ name: 'vexouluna', color: '#9146FF' }" :profile-href="null" />
+        </div>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Signed in: long name, and narrow">
+      <!-- The name sits left of the avatar and ellipsizes; at 700px and below only the avatar shows. -->
+      <StoryFrame height="120px">
+        <div class="story-row" style="justify-content: flex-end">
+          <VxAccountMenu :user="{ name: 'averyveryverylongtwitchname_25' }" />
+        </div>
+      </StoryFrame>
+      <div style="width: 390px; margin-top: 12px">
+        <StoryFrame height="120px">
+          <div class="story-row" style="justify-content: flex-end">
+            <VxAccountMenu :user="{ name: 'vexouluna', color: '#9146FF' }" />
+          </div>
+        </StoryFrame>
+      </div>
+    </Variant>
     <Variant title="Connected: VxAccount">
       <!-- VxAccountMenu wired to useAccount(); here a fake vex-auth answers. -->
       <StoryFrame height="320px">
