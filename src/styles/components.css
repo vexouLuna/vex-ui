@@ -527,6 +527,7 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
   .vx-subnav { display: flex; align-items: center; }
   .vx-signin .vx-signin-label { display: none; }
   .vx-signin { width: var(--vx-ctl); padding: 0; }
+  .vx-account-trigger-name { display: none; }
 }
 
 .vx-foot {
@@ -598,16 +599,22 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 
 /* ---------- Account ---------- */
 .vx-account-trigger {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   flex: none;
-  width: var(--vx-ctl);
+  max-width: 220px;
   height: var(--vx-ctl);
   padding: 0;
   border: none;
-  border-radius: 50%;
+  border-radius: calc(var(--vx-ctl) / 2);
   background: none;
+  color: var(--vx-ink);
+  font: inherit;
   cursor: pointer;
 }
+.vx-account-trigger-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: 13px; padding-left: 4px; }
+.vx-account-pfp { flex: none; width: var(--vx-ctl); height: var(--vx-ctl); }
 .vx-account-who { display: flex; gap: 10px; align-items: center; padding: 6px 8px 8px; border-bottom: 1px solid var(--vx-line); margin-bottom: 4px; }
 .vx-account-name { font-weight: 700; }
 
