@@ -8,17 +8,18 @@ import VxStarfield from '../../src/components/media/VxStarfield.vue'
 import { mulberry32 } from '../../src/utils/random'
 
 const presets = {
-  current: { name: 'Before', tint: 35, line: 9, sheen: 9, edge: 12, stripes: 0, stripeW: 14, stripeGap: 22, angle: 135, streak: 0, rim: 0, bands: 14, bandW: 70, seed: 7, follow: 50 },
-  stripes: { name: 'D · Diagonal lines', tint: 12, line: 10, sheen: 0, edge: 10, stripes: 4, stripeW: 16, stripeGap: 26, angle: 135, streak: 0, rim: 0, bands: 14, bandW: 70, seed: 7, follow: 50 },
-  rim: { name: 'E · Lit rim', tint: 10, line: 0, sheen: 3, edge: 0, stripes: 0, stripeW: 14, stripeGap: 22, angle: 135, streak: 0, rim: 40, bands: 14, bandW: 70, seed: 7, follow: 50 },
-  reflect: { name: 'F · Window reflection', tint: 15, line: 11, sheen: 3, edge: 11, stripes: 0, stripeW: 9, stripeGap: 11, angle: 120, streak: 3, rim: 43, bands: 16, bandW: 55, seed: 15, follow: 50 },
+  current: { name: 'Before', tint: 35, line: 9, sheen: 9, edge: 12, stripes: 0, stripeW: 14, stripeGap: 22, angle: 135, streak: 0, rim: 0, bands: 14, bandW: 70, seed: 7, follow: 50, drift: 0 },
+  stripes: { name: 'D · Diagonal lines', tint: 12, line: 10, sheen: 0, edge: 10, stripes: 4, stripeW: 16, stripeGap: 26, angle: 135, streak: 0, rim: 0, bands: 14, bandW: 70, seed: 7, follow: 50, drift: 0 },
+  rim: { name: 'E · Lit rim', tint: 10, line: 0, sheen: 3, edge: 0, stripes: 0, stripeW: 14, stripeGap: 22, angle: 135, streak: 0, rim: 40, bands: 14, bandW: 70, seed: 7, follow: 50, drift: 0 },
+  reflect: { name: 'F · Window reflection', tint: 15, line: 11, sheen: 3, edge: 11, stripes: 0, stripeW: 9, stripeGap: 11, angle: 120, streak: 3, rim: 43, bands: 16, bandW: 55, seed: 15, follow: 50, drift: 0 },
+  picked: { name: 'G · F, picked + drift', tint: 15, line: 14, sheen: 4, edge: 13, stripes: 0, stripeW: 9, stripeGap: 11, angle: 120, streak: 4, rim: 10, bands: 16, bandW: 55, seed: 15, follow: 50, drift: 5 },
 }
 const knobs = [
   ['tint', 'Darkness', 0, 80, '%'], ['line', 'Border', 0, 40, '%'], ['edge', 'Top highlight', 0, 40, '%'],
   ['sheen', 'Sheen', 0, 30, '%'], ['rim', 'Lit rim', 0, 80, '%'], ['streak', 'Reflection', 0, 30, '%'],
   ['stripes', 'Lines', 0, 20, '%'], ['stripeW', 'Line width', 2, 60, 'px'], ['stripeGap', 'Line gap', 2, 120, 'px'],
   ['angle', 'Line angle', 0, 180, '°'], ['bands', 'Bands / 1600px', 1, 40, ''], ['bandW', 'Max width', 4, 200, 'px'],
-  ['seed', 'Seed', 1, 99, ''], ['follow', 'Follow scroll', 0, 100, '%'],
+  ['seed', 'Seed', 1, 99, ''], ['follow', 'Follow scroll', 0, 100, '%'], ['drift', 'Drift', -40, 40, 'px/s'],
 ]
 const sky = ref('plain')
 const skies = { plain: {}, nebula: { band: true, glow: true } }
@@ -47,6 +48,10 @@ const vars = (c) => ({
   '--g-stripes': `repeating-linear-gradient(${c.angle}deg, ${white(c.stripes)} 0 ${c.stripeW}px, transparent ${c.stripeW}px ${c.stripeW + c.stripeGap}px)`,
   '--g-streak': bands(c),
   '--g-follow': -c.follow / 100,
+  // The reflection's own slow drift: one 3200px loop (a seamless tile) at `drift` px per second; minus runs it up.
+  '--g-drift-time': c.drift ? `${3200 / Math.abs(c.drift)}s` : '0s',
+  '--g-drift-dir': c.drift < 0 ? 'reverse' : 'normal',
+  '--g-drift-play': c.drift ? 'running' : 'paused',
   '--g-rim': `linear-gradient(145deg, ${white(c.rim)}, ${white(c.rim / 8)} 35%, transparent 60%, ${white(c.rim / 3)})`,
 })
 // The page scroll as a px var, so the viewport-pinned reflection can drift up at a fraction of the scroll speed.
@@ -117,7 +122,16 @@ const summary = (c) => knobs.map(([k, , , , u]) => `${k} ${c[k]}${u}`).join(', '
 .gl-head p { margin: 0 0 10px; }
 .gl-head .vx-segmented { margin-bottom: 20px; }
 .gl-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-.gl-col { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.gl-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: gl-drift var(--g-drift-time) linear infinite var(--g-drift-dir) var(--g-drift-play);
+}
+/* Registered, so the offset animates (an unregistered custom property would only flip at the ends). */
+@property --g-drift { syntax: '<length>'; inherits: true; initial-value: 0px; }
+@keyframes gl-drift { to { --g-drift: 3200px; } }
 .gl-colhead { display: flex; justify-content: space-between; align-items: center; }
 .gl-colhead h2 { margin: 0; }
 .gl-card { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
@@ -134,7 +148,7 @@ const summary = (c) => knobs.map(([k, , , , u]) => `${k} ${c[k]}${u}`).join(', '
   background: var(--g-streak), var(--g-stripes), var(--g-sheen), var(--g-tint);
   /* The reflection is pinned to the viewport (it lines up across tiles) and drifts up at --g-follow of the scroll. */
   background-attachment: fixed, scroll, scroll, scroll;
-  background-position: 0 calc(var(--g-scroll-y, 0px) * var(--g-follow)), 0 0, 0 0, 0 0;
+  background-position: 0 calc(var(--g-scroll-y, 0px) * var(--g-follow) + var(--g-drift)), 0 0, 0 0, 0 0;
   background-size: 100% 3200px, auto, auto, auto;
   border-color: var(--g-line);
   box-shadow: var(--g-edge);

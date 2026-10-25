@@ -76,6 +76,16 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   border-radius: var(--vx-radius);
   box-shadow: var(--vx-glass-edge);
 }
+/* The reflection's own drift (see --vx-glass-drift-time). Registered so it animates smoothly; on :root, where
+   --vx-glass-panel resolves it, so every panel moves together. */
+@property --vx-glass-drift { syntax: '<length>'; inherits: true; initial-value: 0px; }
+@keyframes vx-glass-drift { to { --vx-glass-drift: 3200px; } }
+:root { animation: vx-glass-drift var(--vx-glass-drift-time) linear infinite; }
+/* VxSiteShell sets this while the tab is hidden, so it resumes where it was. */
+:root[data-vx-hidden] { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  :root { animation: none; }
+}
 /* The lit rim. .vx-glass-rim gives it to any element (a theme's own panel class), so the ::after isn't copied. */
 .vx-glass-rim { position: relative; }
 .vx-panel::after, .vx-glass-rim::after {
