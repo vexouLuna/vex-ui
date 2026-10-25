@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VxButton, VxDialog, VxKbd, VxMenuItem, VxMenuLabel, VxMenuSeparator, VxPopover, VxTooltip, useToast } from '../../src'
+import { VxButton, VxConfirm, VxDialog, VxKbd, VxMenuItem, VxMenuLabel, VxMenuSeparator, VxPopover, VxTooltip, useToast } from '../../src'
 import StoryFrame from '../StoryFrame.vue'
 
 const dialog = ref(false)
+const confirm = ref(false)
+const typed = ref(false)
+const busy = ref(false)
+function slowDelete() {
+  busy.value = true
+  setTimeout(() => {
+    busy.value = false
+    typed.value = false
+    show('VOD deleted')
+  }, 1200)
+}
 const { show } = useToast()
 const chapters = Array.from({ length: 24 }, (_, i) => ({ name: `Chapter ${i + 1}`, at: `${Math.floor(i / 2)}:${i % 2 ? '30' : '00'}:00` }))
 </script>
@@ -46,6 +57,27 @@ const chapters = Array.from({ length: 24 }, (_, i) => ({ name: `Chapter ${i + 1}
             <VxButton variant="danger-solid" @click="dialog = false; show('Trigger deleted')">Delete</VxButton>
           </template>
         </VxDialog>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Confirm">
+      <!-- VxConfirm: Cancel + the confirming button; stays open while loading; confirm-text asks to type first. -->
+      <StoryFrame>
+        <div class="story-row">
+          <VxButton @click="confirm = true">Rejoin channel…</VxButton>
+          <VxButton variant="danger" @click="typed = true">Delete VOD…</VxButton>
+        </div>
+        <VxConfirm v-model:open="confirm" title="Rejoin #somechannel?" confirm-label="Rejoin" @confirm="confirm = false; show('Rejoined')">
+          The bot joins the chat again and replies straight away.
+        </VxConfirm>
+        <VxConfirm
+          v-model:open="typed"
+          title="Delete this VOD from the archive?"
+          confirm-label="Delete"
+          tone="danger"
+          confirm-text="2581446712"
+          :loading="busy"
+          @confirm="slowDelete"
+        >Removes the VOD with its chat and emotes. The YouTube videos stay. This can't be undone.</VxConfirm>
       </StoryFrame>
     </Variant>
     <Variant title="Toast">

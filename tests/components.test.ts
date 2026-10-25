@@ -9,6 +9,8 @@ import VxStepper from '../src/components/controls/VxStepper.vue'
 import VxTable from '../src/components/data/VxTable.vue'
 import VxUptimeBar from '../src/components/data/VxUptimeBar.vue'
 import VxPopover from '../src/components/overlays/VxPopover.vue'
+import VxConfirm from '../src/components/overlays/VxConfirm.vue'
+import VxLoadState from '../src/components/feedback/VxLoadState.vue'
 import VxAccountMenu from '../src/components/chrome/VxAccountMenu.vue'
 import VxSiteHeader from '../src/components/chrome/VxSiteHeader.vue'
 import VxTooltip from '../src/components/overlays/VxTooltip.vue'
@@ -293,5 +295,39 @@ describe('VxSiteHeader', () => {
     expect(vods!.find('.vx-offsite').exists()).toBe(false)
     expect(live!.attributes('target')).toBe('_blank')
     expect(live!.get('.vx-offsite').text()).toBe('↗')
+  })
+})
+
+describe('VxLoadState', () => {
+  it('shows the error with Try again, then skeletons, then empty, then the content', async () => {
+    const w = mount(VxLoadState, { props: { error: new Error('boom') }, slots: { default: '<p class="c">data</p>' } })
+    expect(w.text()).toContain('boom')
+    await w.get('button').trigger('click')
+    expect(w.emitted('retry')).toHaveLength(1)
+    await w.setProps({ error: null, loading: true })
+    expect(w.find('[aria-busy="true"]').exists()).toBe(true)
+    await w.setProps({ loading: false, empty: true, emptyTitle: 'None' })
+    expect(w.text()).toContain('None')
+    await w.setProps({ empty: false })
+    expect(w.find('.c').exists()).toBe(true)
+  })
+})
+
+describe('VxConfirm', () => {
+  it('confirms only once the text is typed, and not while loading', async () => {
+    const w = mount(VxConfirm, { attachTo: document.body, props: { open: true, title: 'Delete?', confirmText: 'abc' } })
+    await flushPromises()
+    const confirm = () => [...document.body.querySelectorAll<HTMLButtonElement>('.vx-dialog button')].at(-1)!
+    expect(confirm().disabled).toBe(true)
+    const input = document.body.querySelector<HTMLInputElement>('.vx-dialog input')!
+    input.value = 'abc'
+    input.dispatchEvent(new Event('input'))
+    await nextTick()
+    confirm().click()
+    expect(w.emitted('confirm')).toHaveLength(1)
+    await w.setProps({ loading: true })
+    confirm().click()
+    expect(w.emitted('confirm')).toHaveLength(1)
+    w.unmount()
   })
 })

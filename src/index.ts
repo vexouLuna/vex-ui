@@ -39,6 +39,7 @@ export { default as VxMenuItem } from './components/overlays/VxMenuItem.vue'
 export { default as VxMenuLabel } from './components/overlays/VxMenuLabel.vue'
 export { default as VxMenuSeparator } from './components/overlays/VxMenuSeparator.vue'
 export { default as VxDialog } from './components/overlays/VxDialog.vue'
+export { default as VxConfirm } from './components/overlays/VxConfirm.vue'
 export { default as VxToastHost } from './components/overlays/VxToastHost.vue'
 export { default as VxTooltip } from './components/overlays/VxTooltip.vue'
 
@@ -48,6 +49,7 @@ export { default as VxProgress } from './components/feedback/VxProgress.vue'
 export { default as VxSpinner } from './components/feedback/VxSpinner.vue'
 export { default as VxSkeleton } from './components/feedback/VxSkeleton.vue'
 export { default as VxEmptyState } from './components/feedback/VxEmptyState.vue'
+export { default as VxLoadState } from './components/feedback/VxLoadState.vue'
 
 // Data
 export { default as VxTable } from './components/data/VxTable.vue'
