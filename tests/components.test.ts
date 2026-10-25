@@ -10,6 +10,7 @@ import VxStepper from '../src/components/controls/VxStepper.vue'
 import VxTable from '../src/components/data/VxTable.vue'
 import VxUptimeBar from '../src/components/data/VxUptimeBar.vue'
 import VxStatTile from '../src/components/data/VxStatTile.vue'
+import VxStatusDot from '../src/components/data/VxStatusDot.vue'
 import VxPopover from '../src/components/overlays/VxPopover.vue'
 import VxConfirm from '../src/components/overlays/VxConfirm.vue'
 import VxLoadState from '../src/components/feedback/VxLoadState.vue'
@@ -94,7 +95,8 @@ describe('VxTable', () => {
     { key: 'title', label: 'Title', sortable: true },
     { key: 'len', label: 'Length', sortable: true, align: 'right' as const },
   ]
-  const rows = [
+  type Row = { title: string; len: number }
+  const rows: Row[] = [
     { title: 'b', len: 10 },
     { title: 'a', len: 2 },
     { title: 'c', len: 100 },
@@ -118,12 +120,12 @@ describe('VxTable', () => {
 
   it('takes custom headers, keys, row and column classes, and an empty slot', () => {
     const cols = [{ key: 'title', label: 'Title', class: 'end', wrap: true }, { key: 'len', label: '' }]
-    const w = mount(VxTable, {
+    const w = mount(VxTable<Row>, {
       props: {
         columns: cols,
         rows,
-        rowKey: (r: Record<string, unknown>) => `${r.title}/${r.len}`,
-        rowClass: (r: Record<string, unknown>) => ({ long: Number(r.len) > 50 }),
+        rowKey: (r) => `${r.title}/${r.len}`,
+        rowClass: (r) => ({ long: r.len > 50 }),
       },
       slots: { 'head-len': '<span class="sr">Actions</span>', 'cell-title': '<i>{{ params.index }}</i>' },
     })
@@ -320,6 +322,16 @@ describe('VxSiteHeader', () => {
   })
 })
 
+describe('VxStatusDot', () => {
+  it('is the small dot by default and the big one with size lg', () => {
+    const w = mount(VxStatusDot, { props: { status: 'ok', label: 'Up' } })
+    expect(w.classes()).toEqual(['vx-status', 'is-ok'])
+    const lg = mount(VxStatusDot, { props: { status: 'down', size: 'lg', label: 'Down' } })
+    expect(lg.classes()).toEqual(expect.arrayContaining(['is-down', 'is-lg']))
+    expect(lg.text()).toBe('Down')
+  })
+})
+
 describe('VxStatTile', () => {
   it('takes the status as its class and links on when given somewhere to go', () => {
     const w = mount(VxStatTile, { props: { status: 'warn', headline: '2 waiting', href: '#up', linkLabel: 'Uploads' } })
@@ -370,6 +382,19 @@ describe('VxLoadState', () => {
     await w.setProps({ empty: false })
     expect(w.find('.c').exists()).toBe(true)
   })
+
+  it('keeps older content under a warning when a refresh fails with stale', async () => {
+    const w = mount(VxLoadState, { props: { error: new Error('502'), stale: true }, slots: { default: '<p class="c">data</p>' } })
+    expect(w.find('.c').exists()).toBe(true)
+    expect(w.get('.vx-callout').classes()).toContain('is-warn')
+    expect(w.text()).toContain("Couldn't refresh")
+    expect(w.text()).toContain('502')
+    await w.get('button').trigger('click')
+    expect(w.emitted('retry')).toHaveLength(1)
+    await w.setProps({ error: null })
+    expect(w.find('.vx-callout').exists()).toBe(false)
+    expect(w.find('.c').exists()).toBe(true)
+  })
 })
 
 describe('VxConfirm', () => {
@@ -387,6 +412,20 @@ describe('VxConfirm', () => {
     await w.setProps({ loading: true })
     confirm().click()
     expect(w.emitted('confirm')).toHaveLength(1)
+    w.unmount()
+  })
+
+  it('takes the text in any case with confirmIgnoreCase', async () => {
+    const w = mount(VxConfirm, { attachTo: document.body, props: { open: true, title: 'Forget me?', confirmText: 'Alice' } })
+    await flushPromises()
+    const confirm = () => [...document.body.querySelectorAll<HTMLButtonElement>('.vx-dialog button')].at(-1)!
+    const input = document.body.querySelector<HTMLInputElement>('.vx-dialog input')!
+    input.value = 'aLICE '
+    input.dispatchEvent(new Event('input'))
+    await nextTick()
+    expect(confirm().disabled).toBe(true)
+    await w.setProps({ confirmIgnoreCase: true })
+    expect(confirm().disabled).toBe(false)
     w.unmount()
   })
 })

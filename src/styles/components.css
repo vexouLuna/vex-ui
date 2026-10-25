@@ -396,6 +396,7 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
 @keyframes vx-shimmer { to { background-position: -200% 0; } }
 
 .vx-load-rows { display: flex; flex-direction: column; gap: 8px; }
+.vx-load-stale { margin-bottom: 16px; }
 .vx-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 28px 16px; }
 .vx-empty-title { font-weight: 700; }
 .vx-empty-text { font-size: 13px; color: var(--vx-muted); max-width: 32rem; }
@@ -435,6 +436,8 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 .vx-status.is-warn .vx-status-dot { background: var(--vx-warn); }
 .vx-status.is-caution .vx-status-dot { background: var(--vx-caution); }
 .vx-status.is-down .vx-status-dot { background: var(--vx-bad); }
+.vx-status.is-lg { gap: 12px; font-size: inherit; vertical-align: middle; }
+.vx-status.is-lg .vx-status-dot { width: 14px; height: 14px; }
 
 /* A status tile's left edge takes its status colour. */
 .vx-stat-tile { --vx-tile-tone: var(--vx-line); display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 16px; border-left: 3px solid var(--vx-tile-tone); }

@@ -26,7 +26,17 @@ const ignoredColumns = [
   { key: 'reason', label: 'Reason', muted: true, wrap: true },
   { key: 'actions', label: '', align: 'right' as const, nowrap: true },
 ]
-const ignored = ref([
+// An interface, not a type alias: VxTable's row type takes either.
+interface IgnoredUser {
+  userId: string
+  everywhere: boolean
+  user: string
+  by: string
+  when: string
+  reason: string
+  self: boolean
+}
+const ignored = ref<IgnoredUser[]>([
   { userId: '1201', everywhere: false, user: '@spambot_9000', by: '@vexouluna', when: '3 h ago', reason: 'posting the same link in every chat for two days', self: false },
   { userId: '88', everywhere: true, user: '@quietviewer', by: 'themselves', when: '2026-09-02', reason: '', self: true },
 ])
@@ -68,7 +78,7 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
           :columns="ignoredColumns"
           :rows="ignored"
           :row-key="(u) => `${u.everywhere}${u.userId}`"
-          :row-class="(u) => ({ 'is-muted': !!u.self })"
+          :row-class="(u) => ({ 'is-muted': u.self })"
           label="Ignored users"
         >
           <template #head-actions><span class="story-note">actions</span></template>
@@ -81,6 +91,7 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
           </template>
           <template #empty>Nobody is ignored here.</template>
         </VxTable>
+        <p class="story-note">rows typed by an interface (<code>IgnoredUser</code>)</p>
       </StoryFrame>
     </Variant>
     <Variant title="Chips & status">
@@ -105,6 +116,9 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
             <VxStatusDot status="down" label="Down" />
             <VxStatusDot status="off" label="Offline" />
           </div>
+          <!-- size="lg": the dot beside a page title; the label takes the heading's size. -->
+          <h1 style="margin: 0"><VxStatusDot size="lg" status="ok" label="All systems normal" /></h1>
+          <h1 style="margin: 0"><VxStatusDot size="lg" status="live" label="Live now" /></h1>
         </div>
       </StoryFrame>
     </Variant>

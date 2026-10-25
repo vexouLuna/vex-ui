@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="Row extends Record<string, unknown>">
+<script setup lang="ts" generic="Row extends object">
 // Data table. On narrow sites every column stays and the table scrolls sideways (never hide columns).
 // Custom cells: <template #cell-status="{ row, value, index }">, custom headers: #head-status, and #empty for the
 // no-rows line. Sorting is local unless `manual` is set, in which case the page sorts (e.g. on the server) from
@@ -20,13 +20,15 @@ const props = withDefaults(
 )
 const sort = defineModel<SortState | null>('sort', { default: null })
 
+// `object` rather than `Record<string, unknown>` so interfaces fit; columns name fields by string.
+const cell = (row: Row, key: string) => (row as Record<string, unknown>)[key]
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
 const sorted = computed(() => {
   const s = sort.value
   if (props.manual || !s) return props.rows
   const k = s.key
   const out = [...props.rows].sort((a, b) => {
-    const x = a[k], y = b[k]
+    const x = cell(a, k), y = cell(b, k)
     if (typeof x === 'number' && typeof y === 'number') return x - y
     return collator.compare(String(x ?? ''), String(y ?? ''))
   })
@@ -69,7 +71,7 @@ const keyOf = (row: Row, i: number) =>
       <tbody>
         <tr v-for="(row, i) in sorted" :key="keyOf(row, i)" :class="rowClass?.(row)">
           <td v-for="c in columns" :key="c.key" :class="cellClass(c)">
-            <slot :name="`cell-${c.key}`" :row="row" :value="row[c.key]" :index="i">{{ row[c.key] }}</slot>
+            <slot :name="`cell-${c.key}`" :row="row" :value="cell(row, c.key)" :index="i">{{ cell(row, c.key) }}</slot>
           </td>
         </tr>
         <tr v-if="!rows.length">
