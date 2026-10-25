@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Account control: always exactly one control-height tall, signed in or out, so the header never changes size.
-// Signed out: a panel-styled "Sign in" button (icon-only on narrow sites). Signed in: an avatar opening a menu.
+// Signed out: a panel-styled "Sign in" button (icon-only on narrow sites). Signed in: the user's name and avatar
+// opening a menu (avatar only on narrow sites).
 // The menu starts with Profile (the account page on vexoul.net); the site's own items come through the default slot.
 import { computed } from 'vue'
 import type { AccountUser } from '../../types'
@@ -50,8 +51,11 @@ const nameColor = computed(() => (props.user ? twitchColor(props.user.name, prop
         :aria-label="`Account: ${user.name}`"
         @click="toggle"
       >
-        <img v-if="user.avatar" :src="user.avatar" alt="" style="width: 100%; height: 100%; border-radius: 50%" />
-        <VxPlaceholder v-else label="pfp" w="100%" h="100%" round />
+        <span class="vx-account-trigger-name">{{ user.name }}</span>
+        <span class="vx-account-pfp">
+          <img v-if="user.avatar" :src="user.avatar" alt="" style="width: 100%; height: 100%; border-radius: 50%" />
+          <VxPlaceholder v-else label="pfp" w="100%" h="100%" round />
+        </span>
       </button>
     </template>
     <template #default="{ close }">
