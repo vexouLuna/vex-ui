@@ -116,6 +116,9 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
             <VxStatusDot status="down" label="Down" />
             <VxStatusDot status="off" label="Offline" />
           </div>
+          <!-- size="lg": the dot beside a page title; the label takes the heading's size. -->
+          <h1 style="margin: 0"><VxStatusDot size="lg" status="ok" label="All systems normal" /></h1>
+          <h1 style="margin: 0"><VxStatusDot size="lg" status="live" label="Live now" /></h1>
         </div>
       </StoryFrame>
     </Variant>

@@ -10,6 +10,7 @@ import VxStepper from '../src/components/controls/VxStepper.vue'
 import VxTable from '../src/components/data/VxTable.vue'
 import VxUptimeBar from '../src/components/data/VxUptimeBar.vue'
 import VxStatTile from '../src/components/data/VxStatTile.vue'
+import VxStatusDot from '../src/components/data/VxStatusDot.vue'
 import VxPopover from '../src/components/overlays/VxPopover.vue'
 import VxConfirm from '../src/components/overlays/VxConfirm.vue'
 import VxLoadState from '../src/components/feedback/VxLoadState.vue'
@@ -318,6 +319,16 @@ describe('VxSiteHeader', () => {
     expect(vods!.find('.vx-offsite').exists()).toBe(false)
     expect(live!.attributes('target')).toBe('_blank')
     expect(live!.get('.vx-offsite').text()).toBe('↗')
+  })
+})
+
+describe('VxStatusDot', () => {
+  it('is the small dot by default and the big one with size lg', () => {
+    const w = mount(VxStatusDot, { props: { status: 'ok', label: 'Up' } })
+    expect(w.classes()).toEqual(['vx-status', 'is-ok'])
+    const lg = mount(VxStatusDot, { props: { status: 'down', size: 'lg', label: 'Down' } })
+    expect(lg.classes()).toEqual(expect.arrayContaining(['is-down', 'is-lg']))
+    expect(lg.text()).toBe('Down')
   })
 })
 
