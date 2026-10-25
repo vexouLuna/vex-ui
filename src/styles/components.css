@@ -379,6 +379,7 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 .vx-chip.is-ok { color: var(--vx-ok); border-color: color-mix(in srgb, var(--vx-ok) 45%, transparent); }
 .vx-chip.is-bad { color: var(--vx-bad); border-color: color-mix(in srgb, var(--vx-bad) 45%, transparent); }
 .vx-chip.is-warn { color: var(--vx-warn); border-color: color-mix(in srgb, var(--vx-warn) 45%, transparent); }
+.vx-chip.is-caution { color: var(--vx-caution); border-color: color-mix(in srgb, var(--vx-caution) 45%, transparent); }
 .vx-chip.is-active { background: var(--vx-accent); color: var(--vx-bg); border-color: var(--vx-accent); }
 .vx-chip.is-live { background: var(--vx-bad); color: #fff; border-color: var(--vx-bad); font-weight: 700; }
 .vx-chip-key { color: var(--vx-muted); }
@@ -389,6 +390,7 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 .vx-status.is-live .vx-status-dot { background: var(--vx-bad); box-shadow: 0 0 0 3px color-mix(in srgb, var(--vx-bad) 30%, transparent); }
 .vx-status.is-ok .vx-status-dot { background: var(--vx-ok); }
 .vx-status.is-warn .vx-status-dot { background: var(--vx-warn); }
+.vx-status.is-caution .vx-status-dot { background: var(--vx-caution); }
 .vx-status.is-down .vx-status-dot { background: var(--vx-bad); }
 
 /* The gap shrinks with the bar so a hundred ticks still fit a phone. */
@@ -404,6 +406,7 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 }
 .vx-uptime-tick.is-ok { background: var(--vx-ok); }
 .vx-uptime-tick.is-warn { background: var(--vx-warn); }
+.vx-uptime-tick.is-caution { background: var(--vx-caution); }
 .vx-uptime-tick.is-down { background: var(--vx-bad); }
 .vx-uptime-tick.is-pad { background: rgb(255 255 255 / 0.03); }
 .vx-uptime-tick:not(.is-pad):hover { opacity: 0.75; }
