@@ -94,7 +94,8 @@ describe('VxTable', () => {
     { key: 'title', label: 'Title', sortable: true },
     { key: 'len', label: 'Length', sortable: true, align: 'right' as const },
   ]
-  const rows = [
+  type Row = { title: string; len: number }
+  const rows: Row[] = [
     { title: 'b', len: 10 },
     { title: 'a', len: 2 },
     { title: 'c', len: 100 },
@@ -118,12 +119,12 @@ describe('VxTable', () => {
 
   it('takes custom headers, keys, row and column classes, and an empty slot', () => {
     const cols = [{ key: 'title', label: 'Title', class: 'end', wrap: true }, { key: 'len', label: '' }]
-    const w = mount(VxTable, {
+    const w = mount(VxTable<Row>, {
       props: {
         columns: cols,
         rows,
-        rowKey: (r: Record<string, unknown>) => `${r.title}/${r.len}`,
-        rowClass: (r: Record<string, unknown>) => ({ long: Number(r.len) > 50 }),
+        rowKey: (r) => `${r.title}/${r.len}`,
+        rowClass: (r) => ({ long: r.len > 50 }),
       },
       slots: { 'head-len': '<span class="sr">Actions</span>', 'cell-title': '<i>{{ params.index }}</i>' },
     })
