@@ -1,10 +1,40 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import { SITES } from '../../src/sites'
 import VxStarfield from '../../src/components/media/VxStarfield.vue'
 import StoryFrame from '../StoryFrame.vue'
+import { VxChip, VxStatusDot } from '../../src'
+import type { Health } from '../../src/types'
 
-const colours = ['bg', 'surface', 'surface-2', 'ink', 'muted', 'line', 'ok', 'warn', 'bad', 'info']
-const accents = SITES.filter((s) => 'accent' in s).map((s) => s.id)
+const health: Health[] = ['ok', 'warn', 'caution', 'down', 'off']
+const tones = ['ok', 'warn', 'caution', 'bad'] as const
+
+// Every colour token, with what it's for. Values are read from the page so this never goes stale.
+const colours: [string, string][] = [
+  ['bg', 'the page behind everything (the starfield sky)'],
+  ['surface', 'solid panels and inputs'],
+  ['surface-2', 'raised solid: thumbnails, placeholders, track fills'],
+  ['ink', 'body text'],
+  ['muted', 'secondary text, idle icons, "off" status'],
+  ['line', 'borders and dividers'],
+  ['ok', 'up, saved, success'],
+  ['warn', 'degraded, needs a look'],
+  ['caution', 'worse than warn, not yet down (mostly down)'],
+  ['bad', 'down, error, delete, LIVE'],
+  ['info', 'pale star blue: neutral highlights, the accent outside a site'],
+  ['accent', "the current site's accent (switched by data-site)"],
+  ['ring', 'focus rings and the selected outline'],
+  ['hover', 'hover wash over rows and menu items'],
+  ['pop', 'popovers, menus, dialogs'],
+  ['glass', 'glass panel tint'],
+  ['glass-line', 'glass panel border'],
+]
+const values = ref<Record<string, string>>({})
+onMounted(() => {
+  const css = getComputedStyle(document.documentElement)
+  values.value = Object.fromEntries(colours.map(([c]) => [c, css.getPropertyValue(`--vx-${c}`).trim()]))
+})
+const accents = SITES.flatMap((s) => ('accent' in s ? [[s.id, s.accent, s.host] as const] : []))
 const hatches = [
   ['--vx-hatch', 'light stripes: a restricted chapter, a cut', 'var(--vx-surface-2)'],
   ['--vx-hatch-dark', 'dark stripes over a colour: time a part skips', 'var(--vx-accent)'],
@@ -22,18 +52,27 @@ const sizes = [
   <Story title="Tokens" group="foundations" :layout="{ type: 'single', iframe: true }">
     <Variant title="Colour">
       <StoryFrame>
-        <div class="vx-eyebrow">Colour</div>
-        <div class="story-row" style="margin-top: 10px">
-          <div v-for="c in colours" :key="c" style="width: 110px">
+        <div class="vx-eyebrow">Colour (dark only)</div>
+        <div class="story-row" style="margin-top: 10px; align-items: flex-start">
+          <div v-for="[c, what] in colours" :key="c" style="width: 160px">
             <div :style="{ height: '44px', background: `var(--vx-${c})`, border: '1px solid var(--vx-line)', borderRadius: 'var(--vx-radius-sm)' }"></div>
             <code class="story-note">--vx-{{ c }}</code>
+            <div class="story-note vx-mono">{{ values[c] }}</div>
+            <div class="story-note">{{ what }}</div>
           </div>
+        </div>
+        <div class="vx-eyebrow" style="margin-top: 24px">Status scale: ok → warn → caution → bad</div>
+        <div class="story-row" style="margin-top: 10px">
+          <VxStatusDot v-for="h in health" :key="h" :status="h">{{ h }}</VxStatusDot>
+          <VxChip v-for="t in tones" :key="t" :tone="t">{{ t }}</VxChip>
         </div>
         <div class="vx-eyebrow" style="margin-top: 24px">Accent per site (from src/sites.ts, switched by data-site)</div>
         <div class="story-row" style="margin-top: 10px">
-          <div v-for="a in accents" :key="a" style="width: 160px">
+          <div v-for="[a, hex, host] in accents" :key="a" style="width: 160px">
             <div :style="{ height: '44px', background: `var(--vx-accent-${a})`, borderRadius: 'var(--vx-radius-sm)' }"></div>
-            <code class="story-note">[data-site={{ a }}]</code>
+            <code class="story-note">--vx-accent-{{ a }}</code>
+            <div class="story-note vx-mono">{{ hex }}</div>
+            <div class="story-note">{{ host }}</div>
           </div>
         </div>
       </StoryFrame>

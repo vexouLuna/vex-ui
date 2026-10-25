@@ -19,6 +19,7 @@ export {
   TWITCH_DEFAULT_COLORS,
 } from './utils/color'
 export { learnGameColors, sampleHue } from './utils/artColor'
+export { isoDate, isoDateTime, monthGrid, parseDate, showDate } from './utils/date'
 export { useDismiss } from './composables/useClickOutside'
 export { useToast, type Toast, type ToastKind } from './composables/useToast'
 export { useResource, type Resource, type ResourceOptions } from './composables/useResource'
