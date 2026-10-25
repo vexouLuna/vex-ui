@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VxAvatar, VxButton, VxChip, VxStatusDot, VxTable, VxUptimeBar } from '../../src'
+import { VxAvatar, VxButton, VxChip, VxStatTile, VxStatusDot, VxTable, VxUptimeBar } from '../../src'
 import type { Health, SortState, UptimeTick } from '../../src'
 import StoryFrame from '../StoryFrame.vue'
 
@@ -40,7 +40,7 @@ const checks = (n: number, bad: (i: number) => Health | null): UptimeTick[] =>
   })
 const services = [
   { name: 'vexoul.net', ticks: checks(50, () => null) },
-  { name: 'vods', ticks: checks(50, (i) => (i >= 31 && i <= 34 ? 'down' : i === 40 ? 'warn' : null)) },
+  { name: 'vods', ticks: checks(50, (i) => (i >= 31 && i <= 34 ? 'down' : i === 40 ? 'warn' : i === 41 ? 'caution' : null)) },
   { name: 'dtp', ticks: checks(20, (i) => (i === 19 ? 'down' : null)) },
 ]
 const picked = ref<number | null>(33)
@@ -117,6 +117,20 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
           </div>
           <VxUptimeBar v-model:selected="picked" :ticks="services[1]!.ticks" selectable :height="36" label="vods, selectable" />
           <p class="story-note">selected: {{ picked === null ? 'none' : services[1]!.ticks[picked]!.label }} · tap a tick, or arrow keys</p>
+        </div>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Status tile">
+      <!-- The left edge takes the status colour; extra controls go in the default slot. -->
+      <StoryFrame>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px">
+          <VxStatTile label="Recorder" status="live" headline="Recording" sub="started 1:02:44 ago" href="#rec" />
+          <VxStatTile label="Services" status="ok" headline="4 of 4 up" sub="checked 12s ago" href="#svc" link-label="Status page" />
+          <VxStatTile label="YouTube uploads" status="warn" headline="2 waiting" sub="quota resets in 3 h" />
+          <VxStatTile label="Twitch (ad-free)" status="down" headline="Not linked" sub="recordings may show ads">
+            <VxButton size="sm">Link Twitch account</VxButton>
+          </VxStatTile>
+          <VxStatTile label="Chat logger" headline="No data" sub="never reported" />
         </div>
       </StoryFrame>
     </Variant>

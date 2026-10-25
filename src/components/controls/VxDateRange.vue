@@ -1,6 +1,8 @@
 <script setup lang="ts">
-// From / to date inputs with quick presets. Values are ISO dates (YYYY-MM-DD); empty string = open-ended.
+// From / to dates (typed, pasted or picked from a calendar: VxDateInput) with quick presets. Values are ISO dates (YYYY-MM-DD); empty string = open-ended.
 import type { DatePreset } from '../../types'
+import { isoDate as iso } from '../../utils/date'
+import VxDateInput from './VxDateInput.vue'
 
 withDefaults(defineProps<{ presets?: DatePreset[]; min?: string; max?: string }>(), {
   presets: () => [
@@ -12,8 +14,6 @@ withDefaults(defineProps<{ presets?: DatePreset[]; min?: string; max?: string }>
 })
 const from = defineModel<string>('from', { default: '' })
 const to = defineModel<string>('to', { default: '' })
-
-const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
 function apply(p: DatePreset) {
   const now = new Date()
@@ -33,9 +33,9 @@ function apply(p: DatePreset) {
 <template>
   <div class="vx-date-range">
     <div class="vx-date-range-row">
-      <input v-model="from" class="vx-input" type="date" :min="min" :max="to || max" aria-label="From" />
+      <VxDateInput v-model="from" :min="min" :max="to || max" aria-label="From" />
       <span class="vx-muted" aria-hidden="true">→</span>
-      <input v-model="to" class="vx-input" type="date" :min="from || min" :max="max" aria-label="To" />
+      <VxDateInput v-model="to" :min="from || min" :max="max" aria-label="To" />
     </div>
     <div v-if="presets.length" class="vx-date-range-presets">
       <button v-for="p in presets" :key="p.label" type="button" class="vx-chip" @click="apply(p)">{{ p.label }}</button>
