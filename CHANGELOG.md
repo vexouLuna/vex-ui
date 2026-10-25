@@ -1,5 +1,22 @@
 # @vex/ui
 
+## 0.29.0
+
+### Minor Changes
+
+- 7df28a2: `VxAccountMenu` (and `VxAccount`) start the menu with a Profile item linking to `https://vexoul.net/account`. `profile-href` points it elsewhere; `:profile-href="null"` leaves it out.
+- 02c82fb: `VxAccountMenu` shows the signed-in user's name to the left of the avatar; at 700px and below only the avatar shows. The trigger keeps its "Account: name" label.
+- 02cf7da: New `--vx-caution` colour (#f2994a, amber between `--vx-warn` and `--vx-bad`) for "worse than degraded, not yet down". `Health` gains `'caution'`, so `VxUptimeBar` ticks, `VxStatusDot` and `VxChip tone="caution"` use it. The Tokens story lists every colour token with its value and meaning.
+- 92c5518: New `VxDateInput`: a text field for `YYYY-MM-DD` (or, with `time`, `YYYY-MM-DD HH:mm`, 24 h) with a calendar button. Typing and pasting work; the value keeps the native inputs' shape (`2026-10-23`, `2026-10-23T14:05`). `VxDateRange` uses it instead of native date pickers. `parseDate`, `monthGrid`, `isoDate`, `isoDateTime` and `showDate` are exported (also from `@vex/ui/utils`).
+- 0fca1d1: Glass: the values picked in the glass lab (border 14%, top highlight 13%, sheen 4%, lit rim 10%, reflection 4%), and
+  the window reflection now drifts down by itself at 5px/s on top of following the scroll. `--vx-glass-drift-time`
+  sets the speed (one 3200px loop; default `640s`); it pauses while the tab is hidden, and reduced motion stops it.
+- 778e434: New `VxLoadState` (error with "Try again", skeleton rows while loading, empty state, then the content) and `VxConfirm` (a confirm dialog: title, confirm label, `tone="danger"`, `loading`, optional type-to-confirm `confirm-text`).
+- e7621b4: New `VxNavBar` (a section's own nav: label, links with the current one marked, `#lead` and `#trail` slots), `VxPageHead` (eyebrow, h1 title, actions, a line of text) and the `.vx-facts` class for label/value lists (`.is-inline` for label beside value).
+- b287c2f: New `VxTextarea` (multi-line VxInput) and `VxSaveBar` (sticky "N unsaved changes" bar with Undo and Save, an error slot above, `submit` to make Save the form's submit button). Fix: `mono` on `VxInput` now actually switches to the mono font.
+- 70bd0b6: New `VxStatTile`: an overview tile with an eyebrow, a status dot and headline, a line under it, an optional link on and a default slot, its left edge in the status colour (ok, warn, caution, down/live, off).
+- aae3011: `VxTable` fits hand-written tables: `#head-<key>` header slots, `#empty`, `index` in cell slots, `rowKey` as a function, `rowClass`, and column `class`, `nowrap` and `wrap` (a prose column that wraps even on narrow sites).
+
 ## 0.28.1
 
 ### Patch Changes
