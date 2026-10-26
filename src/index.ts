@@ -36,6 +36,7 @@ export { default as VxDateRange } from './components/controls/VxDateRange.vue'
 export { default as VxTabs } from './components/controls/VxTabs.vue'
 export { default as VxSegmented } from './components/controls/VxSegmented.vue'
 export { default as VxPagination } from './components/controls/VxPagination.vue'
+export { default as VxTagInput } from './components/controls/VxTagInput.vue'
 
 // Overlays
 export { default as VxPopover } from './components/overlays/VxPopover.vue'
