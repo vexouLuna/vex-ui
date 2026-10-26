@@ -18,6 +18,8 @@ const props = withDefaults(
     cap?: number
     /** ARIA role of the panel. */
     role?: 'menu' | 'dialog' | 'listbox'
+    /** The panel's id, for a trigger's aria-controls. */
+    panelId?: string
   }>(),
   { prefer: 'down', align: 'left', width: '260px', cap: 420, role: 'menu' },
 )
@@ -100,6 +102,7 @@ defineExpose({ open: show, close, toggle, reposition })
     <Teleport to="body">
       <div
         v-if="open"
+        :id="panelId"
         ref="panel"
         class="vx-popover-panel vx-pop vx-overlay"
         :class="[`is-${dir}`, `is-${align}`]"

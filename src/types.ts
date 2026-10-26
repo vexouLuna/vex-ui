@@ -33,6 +33,25 @@ export interface Option<T = string> {
   title?: string
 }
 
+/** An option of VxTagInput. */
+export interface TagOption {
+  value: string
+  label?: string
+  /** A CSS colour, shown as a dot on the option and its chip. */
+  color?: string
+  /** Secondary text on the right of the option. */
+  hint?: string
+}
+
+/** A VxTagInput chip that can't be removed and isn't in the model. */
+export interface LockedTag {
+  value: string
+  label?: string
+  tone?: 'default' | 'accent' | 'ok' | 'warn' | 'caution' | 'bad'
+  /** Why it's locked: the chip's tooltip. */
+  title?: string
+}
+
 export interface Chapter {
   name: string
   start: number

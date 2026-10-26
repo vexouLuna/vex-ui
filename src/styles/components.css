@@ -87,6 +87,65 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
 .vx-input-wrap.has-clear .vx-input { padding-right: 34px; }
 .vx-input-wrap .vx-input-clear { position: absolute; right: 3px; top: 50%; transform: translateY(-50%); }
 
+/* VxTagInput: chips and the text input wrap inside one box that looks like .vx-input and grows a row at a time. */
+.vx-tag-field { display: flex; flex-direction: column; gap: 6px; width: 100%; min-width: 0; }
+.vx-tag-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-height: var(--vx-ctl);
+  padding: 3px 6px;
+  background: var(--vx-glass);
+  border: 1px solid var(--vx-glass-line);
+  border-radius: var(--vx-radius-sm);
+  cursor: text;
+}
+.vx-tag-input:focus-within { outline: 1px solid var(--vx-accent); outline-offset: 1px; }
+.vx-tag-input.is-invalid { border-color: var(--vx-bad); }
+.vx-tag-input.is-disabled { opacity: 0.55; cursor: not-allowed; }
+/* `contents` keeps the input on the chips' last row; role="list" on the <ul> keeps its list semantics. */
+.vx-tag-chips { display: contents; list-style: none; }
+.vx-tag-chips > li { display: inline-flex; min-width: 0; max-width: 100%; }
+.vx-tag { color: var(--vx-ink); max-width: 100%; padding-right: 2px; }
+.vx-tag.is-locked { padding-right: 8px; }
+.vx-tag.is-marked { border-color: var(--vx-accent); background: color-mix(in srgb, var(--vx-accent) 18%, transparent); }
+.vx-tag-lock { font-size: 9px; opacity: 0.7; }
+.vx-tag-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+.vx-tag-x {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--vx-muted);
+  font-size: 10px;
+  cursor: pointer;
+}
+.vx-tag-x:hover:not(:disabled), .vx-tag-x:focus-visible { color: var(--vx-ink); background: var(--vx-hover); }
+.vx-tag-x:focus-visible { outline: 1px solid var(--vx-accent); }
+.vx-tag-text {
+  flex: 1 1 80px;
+  min-width: 80px;
+  height: calc(var(--vx-ctl) - 8px);
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: var(--vx-ink);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+/* The box carries the focus ring (:focus-within), so not the input as well. */
+.vx-tag-input .vx-tag-text:focus-visible { outline: none; }
+.vx-tag-text::placeholder { color: var(--vx-muted); }
+.vx-tag-text:disabled { cursor: not-allowed; }
+.vx-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
 .vx-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .vx-field-label { font-size: 13px; line-height: 20px; font-weight: 600; color: var(--vx-ink); }
 /* A row of fields and the buttons or checkboxes that go with them. Everything lines up with the fields' controls,
@@ -295,6 +354,7 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
 }
 .vx-menu-item:hover:not(:disabled) { background: var(--vx-hover); color: var(--vx-ink); }
 .vx-menu-item.is-current { background: rgb(255 255 255 / 0.04); }
+.vx-menu-item.is-active { background: var(--vx-hover); }
 .vx-menu-item.is-current .vx-menu-main { color: var(--vx-accent); }
 .vx-menu-item.is-danger .vx-menu-main { color: var(--vx-bad); }
 .vx-menu-item:disabled { cursor: not-allowed; opacity: 0.55; }
