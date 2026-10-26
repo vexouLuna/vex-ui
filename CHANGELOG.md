@@ -1,5 +1,19 @@
 # @vex/ui
 
+## 0.31.0
+
+### Minor Changes
+
+- 5bbbebd: VxDateInput: `seconds` (with `time`) types and stores the time to the second (`2026-10-23T14:05:09`, like `datetime-local` with `step=1`); `parseDate` and `isoDateTime` take a matching `seconds` argument.
+- 5bbbebd: VxLoadState: `data` comes back non-null in the default slot (`v-slot="{ data }"`), so content needs no `v-if`; `margin` spaces the error, skeleton and empty stand-ins; with `stale` and `empty`, a failed refresh shows `#empty` under the warning instead of the content.
+- 5bbbebd: VxSaveBar: `errorTitle` and `statusText` (the count line) props alongside `saveLabel` and `undoLabel`; the defaults keep today's wording.
+- 5bbbebd: VxStatTile: a `#before-sub` slot for content between the headline and the sub line.
+- 5bbbebd: VxTable: `wrap` lets cells wrap on narrow sites too (a `nowrap` column still keeps one line), `headless` drops the header row, `span` makes a cell cover the next columns (colspan), and a `rowKey` function now gets the row index as its second argument.
+
+### Patch Changes
+
+- 6cea2cd: VxStarfield: resizing the window (a side pane opening or closing) no longer moves the stars. The sky is laid out on a fixed field at least the screen's size, so the pointer parallax, drift, band and nebula no longer depend on the canvas width; a resize only reveals or hides stars. Reduced motion is unchanged.
+
 ## 0.30.0
 
 ### Minor Changes
