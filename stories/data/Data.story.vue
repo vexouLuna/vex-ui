@@ -40,6 +40,30 @@ const ignored = ref<IgnoredUser[]>([
   { userId: '1201', everywhere: false, user: '@spambot_9000', by: '@vexouluna', when: '3 h ago', reason: 'posting the same link in every chat for two days', self: false },
   { userId: '88', everywhere: true, user: '@quietviewer', by: 'themselves', when: '2026-09-02', reason: '', self: true },
 ])
+// doomtp's triggers: long expressions that wrap on phones, and pack rows whose note spans the last two columns.
+const triggerColumns = [
+  { key: 'type', label: 'Type' },
+  { key: 'expr', label: 'Expression', mono: true },
+  { key: 'runAs', label: 'Runs as', muted: true, nowrap: true },
+  { key: 'on', label: 'On' },
+  { key: 'actions', label: '', align: 'right' as const, nowrap: true },
+]
+interface Trigger {
+  id: string
+  type: string
+  expr: string
+  runAs: string
+  pack?: string
+}
+const triggers: Trigger[] = [
+  { id: 't1', type: 'listener', expr: '/^!hello/ → say "hi {user.name}, welcome to the stream"', runAs: 'rank 10' },
+  { id: 't2', type: 'timer', expr: 'every 15m: say "follow for more DOOM and fewer sleeping hours"', runAs: 'rank 50', pack: 'socials' },
+]
+const triggerSpan = (t: Trigger, c: { key: string }) => (t.pack && c.key === 'on' ? 2 : undefined)
+const pairs = [
+  { key: 'Owner', value: '@vexouluna' },
+  { key: 'Admins', value: '@keeki_dechu, @someone_with_a_long_name' },
+]
 const filters = ref(['DOOM Eternal'])
 // Fifty one-minute checks: a short outage, one slow check, and a newer service with only twenty.
 const checks = (n: number, bad: (i: number) => Health | null): UptimeTick[] =>
@@ -94,6 +118,20 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
         <p class="story-note">rows typed by an interface (<code>IgnoredUser</code>)</p>
       </StoryFrame>
     </Variant>
+    <Variant title="Table: wrap on phones, spans, no header">
+      <StoryFrame site="dtp">
+        <VxTable :columns="triggerColumns" :rows="triggers" :row-key="(t, i) => `${t.id}:${i}`" :span="triggerSpan" wrap label="Triggers">
+          <template #cell-on="{ row }">
+            <span v-if="row.pack" class="story-note">From the {{ row.pack }} pack. Turn it off with its module.</span>
+            <VxChip v-else tone="ok">on</VxChip>
+          </template>
+          <template #cell-actions><VxButton size="sm" variant="ghost">Edit</VxButton></template>
+        </VxTable>
+        <p class="story-note"><code>wrap</code>: cells wrap on narrow sites too (try ~390px); the pack row spans On and the actions</p>
+        <VxTable :columns="[{ key: 'key', label: 'Role', muted: true, nowrap: true }, { key: 'value', label: 'Who' }]" :rows="pairs" row-key="key" headless wrap label="Bot admins" />
+        <p class="story-note"><code>headless</code>: no header row</p>
+      </StoryFrame>
+    </Variant>
     <Variant title="Chips & status">
       <StoryFrame site="vods">
         <div class="story-col">
@@ -145,6 +183,9 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
             <VxButton size="sm">Link Twitch account</VxButton>
           </VxStatTile>
           <VxStatTile label="Chat logger" headline="No data" sub="never reported" />
+          <VxStatTile label="YouTube" status="ok" headline="Linked" sub="checked 4 min ago">
+            <template #before-sub><a href="#yt" class="story-note">youtube.com/@vexouluna</a></template>
+          </VxStatTile>
         </div>
       </StoryFrame>
     </Variant>

@@ -23,6 +23,12 @@ describe('parseDate', () => {
     expect(parseDate('2026-10-23 12:60', true)).toBeNull()
   })
 
+  it('keeps seconds with `seconds`', () => {
+    expect(parseDate('2026-10-23 09:05:07', true, true)).toBe('2026-10-23T09:05:07')
+    expect(parseDate('2026-10-23 09:05', true, true)).toBe('2026-10-23T09:05:00')
+    expect(parseDate('2026-10-23 09:05:60', true, true)).toBeNull()
+  })
+
   it('turns a pasted timestamp with a zone into local time', () => {
     const local = new Date(Date.UTC(2026, 9, 23, 14, 5))
     const pad = (n: number) => String(n).padStart(2, '0')
@@ -81,6 +87,24 @@ describe('VxDateInput', () => {
     expect((w.get('input').element as HTMLInputElement).value).toBe('2026-10-23 14:05')
     await w.get('input').setValue('2026-10-24 08:30')
     expect(w.props('modelValue')).toBe('2026-10-24T08:30')
+    w.unmount()
+  })
+
+  it('keeps seconds with `seconds`, from typing and from the calendar', async () => {
+    const w = field({ time: true, seconds: true, modelValue: '2026-10-23T14:05:09' })
+    const input = w.get('input')
+    expect((input.element as HTMLInputElement).value).toBe('2026-10-23 14:05:09')
+    expect(input.attributes('placeholder')).toBe('YYYY-MM-DD HH:mm:ss')
+    ;(input.element as HTMLInputElement).value = '2026-10-24 08:30'
+    await input.trigger('input')
+    expect(w.props('modelValue')).toBe('2026-10-23T14:05:09') // not whole until the seconds are typed
+    await input.setValue('2026-10-24 08:30:15')
+    expect(w.props('modelValue')).toBe('2026-10-24T08:30:15')
+    await w.get('[aria-label="Choose from a calendar"]').trigger('click')
+    await flushPromises()
+    document.body.querySelector<HTMLButtonElement>('[aria-label="2026-10-10"]')!.click()
+    await flushPromises()
+    expect(w.props('modelValue')).toBe('2026-10-10T08:30:15')
     w.unmount()
   })
 
