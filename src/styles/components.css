@@ -516,6 +516,8 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
   .vx-table td, .vx-table th { white-space: nowrap; }
   /* …except a column of prose (a reason, a note), which wraps at a readable width. */
   .vx-table td.is-wrap, .vx-table th.is-wrap { white-space: normal; min-width: 24ch; }
+  /* …or every cell but a `nowrap` column's, when the table is set to `wrap`. */
+  .vx-table.is-wrap td:not(.is-nowrap) { white-space: normal; }
 }
 
 /* ---------- Placeholder (every image, logo and icon until real assets exist) ---------- */

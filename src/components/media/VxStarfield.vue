@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Canvas starfield drawn at its own size (its parent's by default): seeded, one canvas, ~30fps cap, paused when off-screen,
-// and still (no twinkle, drift, parallax or meteors) under prefers-reduced-motion.
+// and still (no twinkle, drift, parallax or meteors) under prefers-reduced-motion. The sky is laid out on a fixed field (at
+// least the screen's size), not the canvas's, so resizing the window (a side pane opening) only reveals or hides stars.
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { generateStars, METEOR_GAPS, STARFIELD_DEFAULTS, type Star, type StarfieldOptions } from '../../utils/starfield'
 
@@ -21,6 +22,7 @@ let host: HTMLElement | null = null
 let stars: Star[] = []
 let nebula: HTMLCanvasElement | null = null
 let w = 0, h = 0, dpr = 1
+let fw = 0, fh = 0 // the field the sky is laid out on: the canvas, or the screen when that's bigger
 let raf = 0, last = 0, visible = true
 const VIEW_H = 900 // parallax is measured in page pixels, so the page height never changes it
 const t0 = performance.now()
@@ -33,22 +35,24 @@ let reduced: MediaQueryList | undefined
 
 function build() {
   const o = opts.value
-  const g = generateStars(props.seed, w, h, o)
+  fw = Math.max(w, window.screen?.width || 0)
+  fh = Math.max(h, window.screen?.height || 0)
+  const g = generateStars(props.seed, fw, fh, o)
   stars = g.stars
   nebula = null
   if (!o.band) return
   const rnd = g.rnd
   nebula = document.createElement('canvas')
-  nebula.width = w * dpr
-  nebula.height = h * dpr
+  nebula.width = fw * dpr
+  nebula.height = fh * dpr
   const n = nebula.getContext('2d')
   if (!n) return
   n.scale(dpr, dpr)
-  const vh = Math.min(h, 900)
+  const vh = Math.min(fh, 900)
   const tints = ['120,140,255', '190,120,255', '255,200,160', '140,200,255']
   for (let i = 0; i < 22; i++) {
     const f = rnd()
-    const cx = f * w + (rnd() - 0.5) * 80
+    const cx = f * fw + (rnd() - 0.5) * 80
     const cy = vh * 0.85 - f * vh * 0.8 + (rnd() - 0.5) * g.bandW
     const r = 60 + rnd() * 180
     const grad = n.createRadialGradient(cx, cy, 0, cx, cy, r)
@@ -72,14 +76,15 @@ function draw(now: number) {
   const moving = motion()
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
   ctx.clearRect(0, 0, w, h)
-  if (nebula) ctx.drawImage(nebula, 0, 0, w, h)
+  if (nebula) ctx.drawImage(nebula, 0, 0, fw, fh)
 
   pointer.x += (pointer.tx - pointer.x) * 0.06
   pointer.y += (pointer.ty - pointer.y) * 0.06
 
   for (const s of stars) {
     let x = s.x, y = s.y
-    if (moving && o.drift) x = (((x + t * 6 * s.depth) % w) + w) % w
+    if (moving && o.drift) x = (((x + t * 6 * s.depth) % fw) + fw) % fw
+    if (x > w + o.parallax || y > h + o.parallax) continue
     if (moving && o.pointer) {
       x += pointer.x * s.depth * o.parallax
       y += pointer.y * s.depth * o.parallax
@@ -170,7 +175,7 @@ function onVisibility([e]: IntersectionObserverEntry[]) {
 function onMove(e: PointerEvent) {
   if (!host) return
   const r = host.getBoundingClientRect()
-  pointer.tx = ((e.clientX - r.left) / r.width - 0.5) * 2
+  pointer.tx = ((e.clientX - r.left) / (fw || r.width) - 0.5) * 2
   pointer.ty = ((e.clientY - r.top) / VIEW_H - 0.5) * 2
 }
 

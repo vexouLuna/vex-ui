@@ -5,7 +5,7 @@ import StoryFrame from '../StoryFrame.vue'
 
 const f = reactive({
   name: 'vexouluna', search: '', delay: 1.5, sort: 'new', check: true, radio: 'all', sw: true, sw2: false, vol: 40,
-  from: '2026-09-01', to: '2026-09-24', note: 'Live most weeknights from 8pm.', saved: 'Live most weeknights from 8pm.', day: '2026-10-23', at: '2026-10-23T14:05', due: '',
+  from: '2026-09-01', to: '2026-09-24', note: 'Live most weeknights from 8pm.', saved: 'Live most weeknights from 8pm.', day: '2026-10-23', at: '2026-10-23T14:05', atSec: '2026-10-23T20:00:00', due: '',
 })
 const nameErr = computed(() => (f.name.length < 3 ? 'At least 3 characters.' : ''))
 const sorts = [
@@ -101,17 +101,26 @@ const sorts = [
             @undo="f.note = f.saved"
           />
           <VxSaveBar :count="3" error="The bot API answered 502." />
+          <VxSaveBar
+            :count="2"
+            undo-label="Reset"
+            error-title="Couldn't save"
+            :status-text="(n: number) => (n ? 'Unsaved changes' : '')"
+          />
+          <p class="story-note">wording props: undo-label, error-title, status-text</p>
         </form>
       </StoryFrame>
     </Variant>
     <Variant title="Date and date-time input">
       <!-- Type, paste (a pasted 2026-10-23T12:05:00Z becomes local time) or pick from the calendar. -->
-      <StoryFrame height="460px">
+      <StoryFrame height="540px">
         <div class="story-col" style="max-width: 320px">
           <VxField v-slot="{ id }" label="Day"><VxDateInput :id="id" v-model="f.day" /></VxField>
           <code class="story-note">{{ f.day || '…' }}</code>
           <VxField v-slot="{ id }" label="Starts at" help="24-hour time"><VxDateInput :id="id" v-model="f.at" time /></VxField>
           <code class="story-note">{{ f.at || '…' }}</code>
+          <VxField v-slot="{ id }" label="Streamed at" help="To the second"><VxDateInput :id="id" v-model="f.atSec" time seconds /></VxField>
+          <code class="story-note">{{ f.atSec || '…' }}</code>
           <VxField v-slot="{ id }" label="Due (this year only)"><VxDateInput :id="id" v-model="f.due" min="2026-01-01" max="2026-12-31" /></VxField>
           <VxField v-slot="{ id }" label="Disabled"><VxDateInput :id="id" model-value="2026-10-23" disabled /></VxField>
         </div>

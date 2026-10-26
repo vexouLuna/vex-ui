@@ -136,6 +136,24 @@ describe('VxTable', () => {
     const none = mount(VxTable, { props: { columns: cols, rows: [] }, slots: { empty: 'Nobody is ignored here.' } })
     expect(none.get('td').text()).toBe('Nobody is ignored here.')
   })
+
+  it('passes the index to rowKey, drops the header when headless, and marks wrap', () => {
+    const keys: number[] = []
+    const w = mount(VxTable<Row>, { props: { columns, rows, rowKey: (r, i) => (keys.push(i), `${r.title}:${i}`), headless: true, wrap: true } })
+    expect(keys).toEqual([0, 1, 2])
+    expect(w.find('thead').exists()).toBe(false)
+    expect(w.get('table').classes()).toContain('is-wrap')
+    expect(mount(VxTable, { props: { columns, rows } }).get('table').classes()).not.toContain('is-wrap')
+  })
+
+  it('spans a cell over the next columns and skips the cells it covers', () => {
+    const cols = [{ key: 'title', label: 'Title' }, { key: 'len', label: 'Length' }, { key: 'x', label: 'X' }]
+    const w = mount(VxTable<Row>, {
+      props: { columns: cols, rows, span: (r, c) => (r.len > 50 && c.key === 'len' ? 2 : r.title === 'a' && c.key === 'title' ? 9 : undefined) },
+    })
+    const tds = w.findAll('tbody tr').map((tr) => tr.findAll('td').map((td) => td.attributes('colspan') ?? '1'))
+    expect(tds).toEqual([['1', '1', '1'], ['3'], ['1', '2']])
+  })
 })
 
 describe('VxAccountMenu', () => {
@@ -340,6 +358,12 @@ describe('VxStatTile', () => {
     expect(w.text()).toContain('Uploads')
     expect(mount(VxStatTile, { props: { headline: 'x' } }).find('a').exists()).toBe(false)
   })
+
+  it('puts #before-sub between the headline and the sub line', () => {
+    const w = mount(VxStatTile, { props: { headline: 'x', sub: 'checked now' }, slots: { 'before-sub': '<i>link</i>', default: '<b>more</b>' } })
+    expect(w.html().indexOf('<i>')).toBeLessThan(w.html().indexOf('checked now'))
+    expect(w.html().indexOf('checked now')).toBeLessThan(w.html().indexOf('<b>'))
+  })
 })
 
 describe('VxNavBar', () => {
@@ -366,6 +390,15 @@ describe('VxSaveBar', () => {
     await w.setProps({ count: 0 })
     expect(w.text()).toContain('No changes')
     expect(save!.attributes('disabled')).toBeDefined()
+  })
+
+  it('takes its words as props', () => {
+    const w = mount(VxSaveBar, {
+      props: { count: 1, undoLabel: 'Reset', error: 'x', errorTitle: 'Not saved', statusText: (n: number) => (n ? 'Unsaved changes' : '') },
+    })
+    expect(w.text()).toContain('Unsaved changes')
+    expect(w.text()).toContain('Reset')
+    expect(w.text()).toContain('Not saved')
   })
 })
 
@@ -394,6 +427,26 @@ describe('VxLoadState', () => {
     await w.setProps({ error: null })
     expect(w.find('.vx-callout').exists()).toBe(false)
     expect(w.find('.c').exists()).toBe(true)
+  })
+
+  it('shows #empty, not the content, when a stale refresh fails with nothing in it', () => {
+    const w = mount(VxLoadState, {
+      props: { error: new Error('502'), stale: true, empty: true },
+      slots: { default: '<p class="c">data</p>', empty: '<p class="e">none</p>' },
+    })
+    expect(w.text()).toContain("Couldn't refresh")
+    expect(w.find('.e').exists()).toBe(true)
+    expect(w.find('.c').exists()).toBe(false)
+  })
+
+  it('hands the data to the default slot and spaces the stand-ins with margin', async () => {
+    const w = mount(VxLoadState<{ name: string } | null>, {
+      props: { data: null, loading: true, margin: '0 0 12px' },
+      slots: { default: '<p class="c">{{ params.data.name }}</p>' },
+    })
+    expect(w.get('[aria-busy="true"]').attributes('style')).toContain('margin: 0px 0px 12px')
+    await w.setProps({ data: { name: 'Keeki' }, loading: false })
+    expect(w.get('.c').text()).toBe('Keeki')
   })
 })
 

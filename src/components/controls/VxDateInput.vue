@@ -4,6 +4,7 @@
 // (two-digit month and day), and on blur or Enter the text is tidied (`2026/9/1` → `2026-09-01`) or marked
 // invalid. The value has the native inputs' shape (`2026-10-23`, `2026-10-23T14:05`; empty string for none), so it drops in for `type=date` and
 // `datetime-local`. Picking a day keeps the time; with `time`, the field then selects the time to type over.
+// `seconds` (with `time`) adds seconds: `YYYY-MM-DD HH:mm:ss`, value `2026-10-23T14:05:09` (`datetime-local` step 1).
 // Attributes (aria-label, id, @blur, ...) go to the text input; class and style stay on the wrapper.
 import { computed, nextTick, ref, useAttrs, watch, type StyleValue } from 'vue'
 import { isoDate, monthGrid, parseDate, showDate } from '../../utils/date'
@@ -15,6 +16,8 @@ const props = withDefaults(
   defineProps<{
     /** Date and time (`YYYY-MM-DDTHH:mm`) rather than a date. */
     time?: boolean
+    /** With `time`, to the second (`YYYY-MM-DDTHH:mm:ss`). */
+    seconds?: boolean
     /** Earliest and latest allowed value, in the same shape as the value. */
     min?: string
     max?: string
@@ -22,7 +25,7 @@ const props = withDefaults(
     invalid?: boolean
     disabled?: boolean
   }>(),
-  { time: false, invalid: false, disabled: false },
+  { time: false, seconds: false, invalid: false, disabled: false },
 )
 const model = defineModel<string>({ default: '' })
 const attrs = useAttrs()
@@ -35,17 +38,20 @@ const text = ref(showDate(model.value))
 const bad = ref(false)
 const input = ref<HTMLInputElement | null>(null)
 watch(model, (v) => {
-  if (parseDate(text.value, props.time) !== v) text.value = showDate(v)
+  if (parseDate(text.value, props.time, props.seconds) !== v) text.value = showDate(v)
   bad.value = false
 })
 
 const inRange = (v: string) => (!props.min || v >= props.min) && (!props.max || v <= props.max)
 /** The text's value if it's a whole, allowed date; '' when blank; null otherwise. */
 function read(t: string): string | null {
-  const v = parseDate(t, props.time)
+  const v = parseDate(t, props.time, props.seconds)
   return v === null || (v && !inRange(v)) ? null : v
 }
-const whole = computed(() => (props.time ? /^\d{4}\D\d\d\D\d\d[ T]\d\d:\d\d/ : /^\d{4}\D\d\d\D\d\d$/))
+const whole = computed(() =>
+  !props.time ? /^\d{4}\D\d\d\D\d\d$/ : props.seconds ? /^\d{4}\D\d\d\D\d\d[ T]\d\d:\d\d:\d\d/ : /^\d{4}\D\d\d\D\d\d[ T]\d\d:\d\d/,
+)
+const timeEnd = computed(() => (props.seconds ? 19 : 16))
 
 function onInput(e: Event) {
   text.value = (e.target as HTMLInputElement).value
@@ -101,12 +107,12 @@ function onGridKey(e: KeyboardEvent) {
 }
 async function pick(d: string, close: () => void) {
   if (!dayAllowed(d)) return
-  const v = props.time ? `${d}T${model.value.slice(11, 16) || '00:00'}` : d
+  const v = props.time ? `${d}T${model.value.slice(11, timeEnd.value) || (props.seconds ? '00:00:00' : '00:00')}` : d
   model.value = props.min && v < props.min ? props.min : props.max && v > props.max ? props.max : v
   close()
   await nextTick()
   input.value?.focus()
-  if (props.time) input.value?.setSelectionRange(11, 16)
+  if (props.time) input.value?.setSelectionRange(11, timeEnd.value)
 }
 </script>
 
@@ -126,7 +132,7 @@ async function pick(d: string, close: () => void) {
       autocomplete="off"
       spellcheck="false"
       :value="text"
-      :placeholder="placeholder ?? (time ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD')"
+      :placeholder="placeholder ?? (time ? (seconds ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD HH:mm') : 'YYYY-MM-DD')"
       :disabled="disabled"
       :aria-invalid="invalid || bad || undefined"
       @input="onInput"
