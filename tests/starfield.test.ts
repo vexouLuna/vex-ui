@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { mount } from '@vue/test-utils'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import VxStarfield from '../src/components/media/VxStarfield.vue'
 import { createNoise } from '../src/utils/perlin'
 import { hashString, mulberry32 } from '../src/utils/random'
 import { generateStars, STARFIELD_DEFAULTS } from '../src/utils/starfield'
@@ -39,5 +41,37 @@ describe('starfield', () => {
     for (let i = 0; i < 200; i++) expect(Math.abs(n.perlin2(i * 0.37, i * 0.91))).toBeLessThanOrEqual(1)
     expect(createNoise(0.5).perlin2(1.3, 2.7)).toBe(createNoise(0.5).perlin2(1.3, 2.7))
     expect(createNoise(0.5).perlin2(1.3, 2.7)).not.toBe(createNoise(0.25).perlin2(1.3, 2.7))
+  })
+})
+
+describe('VxStarfield', () => {
+  // A canvas that records where each star is drawn, and a window whose size the test sets.
+  let size = { width: 1200, height: 600 }
+  let onResize: () => void = () => {}
+  let drawn: string[] = []
+  const at = (x: number, y: number) => drawn.push(`${Math.round(x)},${Math.round(y)}`)
+  beforeEach(() => {
+    drawn = []
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
+      new Proxy({ fillRect: at, arc: at } as Record<string, unknown>, { get: (t, k) => t[k as string] ?? (() => ({ addColorStop() {} })) }) as never,
+    )
+    vi.spyOn(HTMLCanvasElement.prototype, 'getBoundingClientRect').mockImplementation(() => ({ ...size, left: 0, top: 0 }) as DOMRect)
+    vi.stubGlobal('ResizeObserver', class { constructor(cb: () => void) { onResize = cb } observe() {} disconnect() {} })
+    vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} })
+    vi.stubGlobal('matchMedia', () => ({ matches: true, addEventListener() {}, removeEventListener() {} })) // reduced motion: one still frame
+    vi.stubGlobal('screen', { width: 1600, height: 900 })
+  })
+  afterEach(() => vi.restoreAllMocks())
+
+  it('keeps every star in place when the window gets narrower', () => {
+    const w = mount(VxStarfield, { attachTo: document.body, props: { seed: 'vexoul.net', options: { band: true } } })
+    const wide = drawn.filter((p) => +p.split(',')[0]! < 880)
+    drawn = []
+    size = { width: 900, height: 600 }
+    onResize()
+    const narrow = drawn.filter((p) => +p.split(',')[0]! < 880)
+    expect(wide.length).toBeGreaterThan(50)
+    expect(narrow).toEqual(wide)
+    w.unmount()
   })
 })
