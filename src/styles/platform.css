@@ -17,6 +17,7 @@
   --vxp-ok: var(--vx-ok);
   --vxp-warn: var(--vx-warn);
   --vxp-bad: var(--vx-bad);
+  --vxp-on-bad: var(--vx-on-bad);
   --vxp-ring: var(--vx-ring);
   --vxp-radius: var(--vx-radius);
   --vxp-radius-sm: var(--vx-radius-sm);
