@@ -63,6 +63,21 @@ const { show } = useToast()
 - Links use `RouterLink` when vue-router is installed and a plain `<a>` otherwise. The library doesn't depend on
   vue-router.
 - Every class and token is prefixed `vx-` / `--vx-`, so site CSS won't collide with it.
+- **vex-ui is dark-only by design.** Deep Field is a night sky: the tokens set `color-scheme: dark` and there is
+  no light set or `prefers-color-scheme` switch. A site that needs a light page uses its own look (keeki-vods) and
+  `@vex/ui/utils` for the logic.
+- Colours and type come from tokens (`src/styles/tokens.css`): washes `--vx-hover-faint` / `--vx-hover` /
+  `--vx-selected`, `--vx-scrim` behind dialogs, `--vx-on-bad` for text on a `--vx-bad` fill, and the UI text sizes
+  `--vx-text-xs` (11px, the smallest) / `-sm` 12 / `-md` 13 / `-lg` 14.
+- Next to `@vex/platform-web`'s plain-class buttons, the variants line up like this:
+
+  | `VxButton` / `.vx-btn` | `.vxp-btn` (platform-web) |
+  |---|---|
+  | `variant="primary"` / `.is-primary` | `.primary` |
+  | `variant="danger"` / `.is-danger` | `.danger` |
+  | `variant="danger-solid"` / `.is-danger-solid` | `.danger-solid` |
+  | `size="sm"` / `.is-sm` | `.sm` |
+  | `variant="ghost"`, `block`, `pressed`, `icon` | no equivalent |
 
 ### Signing in (`@vex/ui/account`)
 

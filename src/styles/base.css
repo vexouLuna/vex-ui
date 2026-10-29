@@ -58,7 +58,7 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
 .vx-main h3:not(.vx-display) { font-family: var(--vx-font-mono); font-weight: 500; font-size: 1.05rem; color: var(--vx-accent); margin: 1.6em 0 0.4em; }
 .vx-eyebrow {
   font-family: var(--vx-font-mono);
-  font-size: 11px;
+  font-size: var(--vx-text-xs);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -108,7 +108,7 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
 /* Root's signature hover: a dark gap, then a thin white ring */
 .vx-ring { transition: box-shadow 0.15s; }
 .vx-ring:hover, a:hover > .vx-ring, .vx-ring:focus-visible {
-  box-shadow: 0 0 0 4px rgb(0 0 0 / 0.55), 0 0 0 5px var(--vx-ring);
+  box-shadow: 0 0 0 4px var(--vx-scrim), 0 0 0 5px var(--vx-ring);
 }
 
 /* ---------- Code ---------- */
@@ -120,7 +120,7 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   overflow-x: auto;
   white-space: pre;
   font-family: var(--vx-font-mono);
-  font-size: 13px;
+  font-size: var(--vx-text-md);
   line-height: 1.55;
   /* Clear glass like the buttons: the starfield shows through. */
   background: var(--vx-glass);

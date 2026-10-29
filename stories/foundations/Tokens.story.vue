@@ -25,7 +25,10 @@ const colours: [string, string][] = [
   ['info', 'pale star blue: neutral highlights, the accent outside a site'],
   ['accent', "the current site's accent (switched by data-site)"],
   ['ring', 'focus rings and the selected outline'],
+  ['hover-faint', 'resting wash: callouts, current menu item, row hover'],
   ['hover', 'hover wash over rows and menu items'],
+  ['selected', 'selected wash: segmented option, skeleton shimmer'],
+  ['scrim', 'behind dialogs, labels over thumbnails'],
   ['pop', 'popovers, menus, dialogs'],
   ['glass', 'glass panel tint'],
   ['glass-line', 'glass panel border'],
@@ -42,6 +45,7 @@ const hatches = [
   ['--vx-hatch-bad', 'error stripes: time no part covers', 'var(--vx-accent)'],
   ['--vx-hatch-faint', 'the placeholder fill', 'transparent'],
 ]
+const texts = ['xs', 'sm', 'md', 'lg'].map((t) => `--vx-text-${t}`)
 const sizes = [
   ['--vx-ctl-sm', '26 · small controls (32 on a touch screen)'],
   ['--vx-ctl', '32 · every control, avatar, icon button'],
@@ -97,6 +101,9 @@ const sizes = [
           <div class="vx-eyebrow">eyebrow · mono label</div>
           <p style="margin: 0">Geist for names, titles and prose. The quick brown fox jumps over the lazy dog.</p>
           <p class="vx-mono" style="margin: 0">Geist Mono for labels, handles, numbers and code · 1:02:44</p>
+          <div v-for="t in texts" :key="t" class="story-row">
+            <code class="story-note" style="width: 110px">{{ t }}</code><span :style="{ fontSize: `var(${t})` }">Newest · 1:02:44 · LIVE</span>
+          </div>
           <pre class="vx-code"><span class="vx-tok-prefix">!</span><span class="vx-tok-cmd">uptime</span> <span class="vx-tok-op">&gt;</span> <span class="vx-tok-str">"live for {uptime}"</span> <span class="vx-tok-ph">{channel}</span></pre>
         </div>
       </StoryFrame>

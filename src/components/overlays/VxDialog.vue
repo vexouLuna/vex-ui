@@ -63,7 +63,7 @@ onUnmounted(() => returnTo?.focus?.())
         :style="{ width: `min(${width}, 100%)` }"
       >
         <div :id="titleId" class="vx-dialog-title">{{ title }}</div>
-        <div class="vx-muted" style="font-size: 14px"><slot></slot></div>
+        <div class="vx-muted" style="font-size: var(--vx-text-lg)"><slot></slot></div>
         <div v-if="$slots.actions" class="vx-dialog-actions"><slot name="actions" :close="close"></slot></div>
       </div>
     </div>

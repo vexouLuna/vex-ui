@@ -82,7 +82,13 @@
     var(--vx-glass-clear);
   /* Cuts a ::after down to its 1px padding ring, for the lit rim: `background: var(--vx-glass-rim); mask: var(...)`. */
   --vx-glass-rim-mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  /* Washes over glass, faintest to strongest: a resting fill (callout, table row hover, current menu item, an empty
+     uptime tick), the hover, then a selected item (segmented option). */
+  --vx-hover-faint: rgb(255 255 255 / 0.03);
   --vx-hover: rgb(255 255 255 / 0.06);
+  --vx-selected: rgb(255 255 255 / 0.1);
+  /* Darkens what sits behind: a dialog's backdrop, a label over a thumbnail. */
+  --vx-scrim: rgb(0 0 0 / 0.6);
   --vx-pop: rgb(12 12 16 / 0.94);
   --vx-shadow: 0 16px 40px rgb(0 0 0 / 0.6);
 
@@ -97,6 +103,11 @@
   /* Type: mono for labels, handles, numbers and code; sans for names, titles and prose */
   --vx-font-sans: 'Geist Variable', 'Geist', 'Vx Twemoji', system-ui, sans-serif;
   --vx-font-mono: 'Geist Mono Variable', 'Geist Mono', 'Vx Twemoji', ui-monospace, Consolas, monospace;
+  /* Text sizes for UI (body text is 15px, from .vx-site; headings set their own). Nothing goes below xs. */
+  --vx-text-xs: 11px; /* mono labels, chips, captions, badges */
+  --vx-text-sm: 12px; /* help and error text, small buttons, footer */
+  --vx-text-md: 13px; /* controls, menus, tables */
+  --vx-text-lg: 14px; /* tabs, nav, callouts, dialog text */
 
   /* Shape and size. Everything interactive is --vx-ctl tall so rows and headers never change height. */
   --vx-radius: 8px;
