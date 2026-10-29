@@ -35,6 +35,7 @@ const sorts = [
           <VxField v-slot="{ id }" label="Chat delay" help="0.1s steps; shift-click for 1s.">
             <VxStepper :id="id" v-model="f.delay" :step="0.1" :min="-30" :max="30" unit="s" label="Chat delay" />
           </VxField>
+          <p class="story-note">Tab through: every field gets the same 2px focus ring as the buttons.</p>
         </div>
       </StoryFrame>
     </Variant>

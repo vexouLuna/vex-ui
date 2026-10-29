@@ -72,7 +72,9 @@
 .vx-input::placeholder { color: var(--vx-muted); }
 /* After .vx-input's `font: inherit`, which would otherwise undo it (VxInput/VxTextarea `mono`). */
 .vx-input.vx-mono { font-family: var(--vx-font-mono); }
-.vx-input:focus { outline: 1px solid var(--vx-accent); outline-offset: 1px; }
+/* The same 2px ring as every other control (base.css's :focus-visible), here too outside .vx-site (overlays). */
+.vx-input:focus { outline: none; }
+.vx-input:focus-visible { outline: 2px solid var(--vx-accent); outline-offset: 2px; }
 .vx-input.is-invalid { border-color: var(--vx-bad); }
 textarea.vx-input { height: auto; padding: 8px 10px; resize: vertical; line-height: 1.5; }
 input[type='date'].vx-input { color-scheme: dark; font-family: var(--vx-font-mono); }
@@ -102,7 +104,7 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
   border-radius: var(--vx-radius-sm);
   cursor: text;
 }
-.vx-tag-input:focus-within { outline: 1px solid var(--vx-accent); outline-offset: 1px; }
+.vx-tag-input:has(.vx-tag-text:focus-visible) { outline: 2px solid var(--vx-accent); outline-offset: 2px; }
 .vx-tag-input.is-invalid { border-color: var(--vx-bad); }
 .vx-tag-input.is-disabled { opacity: 0.55; cursor: not-allowed; }
 /* `contents` keeps the input on the chips' last row; role="list" on the <ul> keeps its list semantics. */
@@ -127,7 +129,7 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
   cursor: pointer;
 }
 .vx-tag-x:hover:not(:disabled), .vx-tag-x:focus-visible { color: var(--vx-ink); background: var(--vx-hover); }
-.vx-tag-x:focus-visible { outline: 1px solid var(--vx-accent); }
+.vx-tag-x:focus-visible { outline: 2px solid var(--vx-accent); }
 .vx-tag-text {
   flex: 1 1 80px;
   min-width: 80px;
@@ -140,7 +142,7 @@ input[type='search'].vx-input::-webkit-search-cancel-button, input[type='search'
   font-size: 13px;
   outline: none;
 }
-/* The box carries the focus ring (:focus-within), so not the input as well. */
+/* The box carries the focus ring, so not the input as well. */
 .vx-tag-input .vx-tag-text:focus-visible { outline: none; }
 .vx-tag-text::placeholder { color: var(--vx-muted); }
 .vx-tag-text:disabled { cursor: not-allowed; }
