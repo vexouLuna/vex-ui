@@ -31,8 +31,8 @@
 .vx-btn.is-ghost:hover { color: var(--vx-ink); background: var(--vx-hover); border-color: transparent; }
 .vx-btn.is-danger { color: var(--vx-bad); }
 .vx-btn.is-danger:hover { border-color: color-mix(in srgb, var(--vx-bad) 60%, transparent); color: var(--vx-bad); }
-.vx-btn.is-danger-solid { background: var(--vx-bad); border-color: var(--vx-bad); color: #fff; font-weight: 600; box-shadow: none; }
-.vx-btn.is-danger-solid:hover { filter: brightness(1.08); color: #fff; }
+.vx-btn.is-danger-solid { background: var(--vx-bad); border-color: var(--vx-bad); color: var(--vx-on-bad); font-weight: 600; box-shadow: none; }
+.vx-btn.is-danger-solid:hover { filter: brightness(1.08); color: var(--vx-on-bad); }
 .vx-btn.is-pressed { color: var(--vx-accent); border-color: color-mix(in srgb, var(--vx-accent) 55%, transparent); }
 .vx-btn.is-sm { height: var(--vx-ctl-sm); padding: 0 9px; font-size: 12px; gap: 5px; }
 /* Icon buttons are always square; changing state swaps the icon, never the size */
@@ -485,7 +485,7 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 .vx-chip.is-warn { color: var(--vx-warn); border-color: color-mix(in srgb, var(--vx-warn) 45%, transparent); }
 .vx-chip.is-caution { color: var(--vx-caution); border-color: color-mix(in srgb, var(--vx-caution) 45%, transparent); }
 .vx-chip.is-active { background: var(--vx-accent); color: var(--vx-bg); border-color: var(--vx-accent); }
-.vx-chip.is-live { background: var(--vx-bad); color: #fff; border-color: var(--vx-bad); font-weight: 700; }
+.vx-chip.is-live { background: var(--vx-bad); color: var(--vx-on-bad); border-color: var(--vx-bad); font-weight: 700; }
 .vx-chip-key { color: var(--vx-muted); }
 .vx-chip-key::after { content: ':'; margin-right: 2px; }
 
@@ -536,7 +536,7 @@ button.vx-chip:hover:not(.is-active) { color: var(--vx-ink); border-color: var(-
 .vx-avatar { position: relative; display: inline-grid; place-items: center; flex: none; border-radius: 50%; overflow: visible; background: var(--vx-surface-2); }
 .vx-avatar > img, .vx-avatar > .vx-ph { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .vx-avatar.is-live { box-shadow: 0 0 0 2px var(--vx-bg), 0 0 0 4px var(--vx-bad); }
-.vx-avatar-live { position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); background: var(--vx-bad); color: #fff; font-size: 9px; font-weight: 700; padding: 0 4px; border-radius: 3px; line-height: 1.5; }
+.vx-avatar-live { position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); background: var(--vx-bad); color: var(--vx-on-bad); font-size: 9px; font-weight: 700; padding: 0 4px; border-radius: 3px; line-height: 1.5; }
 
 .vx-kbd { font-family: var(--vx-font-mono); font-size: 11px; border: 1px solid var(--vx-line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; }
 

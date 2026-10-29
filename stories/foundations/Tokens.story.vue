@@ -21,6 +21,7 @@ const colours: [string, string][] = [
   ['warn', 'degraded, needs a look'],
   ['caution', 'worse than warn, not yet down (mostly down)'],
   ['bad', 'down, error, delete, LIVE'],
+  ['on-bad', 'text on a bad fill (danger-solid, LIVE)'],
   ['info', 'pale star blue: neutral highlights, the accent outside a site'],
   ['accent', "the current site's accent (switched by data-site)"],
   ['ring', 'focus rings and the selected outline'],

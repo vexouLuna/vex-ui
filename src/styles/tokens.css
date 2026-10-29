@@ -23,6 +23,9 @@
   /* Amber between warn and bad: worse than degraded, not yet down (e.g. a service down most of an hour). */
   --vx-caution: #f2994a;
   --vx-bad: #ff6b5e;
+  /* Text on a --vx-bad fill (danger-solid button, LIVE chip and badge): dark ink, like text on the accent, since
+     white on this pastel red is about 2.6:1 and dark is about 8:1. */
+  --vx-on-bad: var(--vx-bg);
   --vx-ring: #fff;
   /* Each site's accent comes from its entry in src/sites.ts (--vx-accent-<id>, switched by data-site); this is the
      accent outside any site shell. --vx-info is the pale star blue for neutral highlights. */
