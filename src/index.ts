@@ -37,6 +37,7 @@ export { default as VxTabs } from './components/controls/VxTabs.vue'
 export { default as VxSegmented } from './components/controls/VxSegmented.vue'
 export { default as VxPagination } from './components/controls/VxPagination.vue'
 export { default as VxTagInput } from './components/controls/VxTagInput.vue'
+export { default as VxIcon } from './components/controls/VxIcon.vue'
 
 // Overlays
 export { default as VxPopover } from './components/overlays/VxPopover.vue'
@@ -104,6 +105,8 @@ export { createNoise, type Noise2 } from './utils/perlin'
 export { generateStars, STARFIELD_DEFAULTS, SPECTRA, METEOR_GAPS, type StarfieldOptions, type Star, type Spectrum, type MeteorRate } from './utils/starfield'
 export { formatDuration, timeAgo } from './utils/time'
 export { isoDate, isoDateTime, monthGrid, parseDate, showDate } from './utils/date'
+export { syncDocumentTitle, type TitleRouter } from './utils/title'
+export { VX_ICONS, type VxIconName } from './utils/icons'
 
 // Types
 export * from './types'

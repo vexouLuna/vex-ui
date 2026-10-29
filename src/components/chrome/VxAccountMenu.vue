@@ -64,7 +64,7 @@ const nameColor = computed(() => (props.user ? twitchColor(props.user.name, prop
         <VxPlaceholder v-else label="pfp" :w="36" :h="36" round />
         <div style="min-width: 0">
           <div class="vx-account-name" :style="{ color: nameColor }">{{ user.name }}</div>
-          <div class="vx-muted vx-mono" style="font-size: 11px">{{ note }}</div>
+          <div class="vx-muted vx-mono" style="font-size: var(--vx-text-xs)">{{ note }}</div>
         </div>
       </div>
       <VxMenuItem v-if="profileHref" :href="profileHref" @click="close()">Profile</VxMenuItem>

@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
 .vx-toc-layout > .vx-toc { grid-column: 2; grid-row: 1; }
 .vx-toc-layout > :not(.vx-toc) { grid-column: 1; grid-row: 1; min-width: 0; }
 
-.vx-toc { position: sticky; top: 64px; font-size: 13px; }
+.vx-toc { position: sticky; top: 64px; font-size: var(--vx-text-md); }
 .vx-toc-toggle { display: none; }
 .vx-toc-title { margin: 0 0 8px; }
 .vx-toc ol { list-style: none; margin: 0; padding: 0 0 0 1px; max-height: calc(100dvh - 100px); overflow-y: auto; border-left: 1px solid var(--vx-line); }
@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
   text-decoration: none;
   line-height: 1.35;
 }
-.vx-toc a.is-sub { padding-left: 22px; font-size: 12px; }
+.vx-toc a.is-sub { padding-left: 22px; font-size: var(--vx-text-sm); }
 .vx-toc a:hover { color: var(--vx-ink); }
 .vx-toc a.is-active { color: var(--vx-accent); border-left-color: var(--vx-accent); }
 

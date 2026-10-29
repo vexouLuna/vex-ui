@@ -12,6 +12,8 @@ import VxUptimeBar from '../src/components/data/VxUptimeBar.vue'
 import VxStatTile from '../src/components/data/VxStatTile.vue'
 import VxStatusDot from '../src/components/data/VxStatusDot.vue'
 import VxPopover from '../src/components/overlays/VxPopover.vue'
+import VxSelect from '../src/components/controls/VxSelect.vue'
+import VxIcon from '../src/components/controls/VxIcon.vue'
 import VxConfirm from '../src/components/overlays/VxConfirm.vue'
 import VxLoadState from '../src/components/feedback/VxLoadState.vue'
 import VxAccountMenu from '../src/components/chrome/VxAccountMenu.vue'
@@ -225,6 +227,51 @@ describe('VxPopover', () => {
     expect(panel.style.top).toBe('138px')
     expect(panel.style.left).toBe('40px')
     expect(panel.style.width).toBe('100px')
+    w.unmount()
+  })
+})
+
+describe('VxSelect', () => {
+  const options = [
+    { value: 'new', label: 'Newest' },
+    { value: 'old', label: 'Oldest', disabled: true },
+    { value: 'long', label: 'Longest' },
+    { value: 'short', label: 'Shortest' },
+  ]
+  const active = (b: Element) => document.getElementById(b.getAttribute('aria-activedescendant') ?? '')?.textContent
+
+  it('works from the keyboard: arrows skip disabled options, Home/End, type-ahead, Enter picks, Escape closes', async () => {
+    const w = mount(VxSelect, { attachTo: document.body, props: { options, modelValue: 'new' } })
+    const b = w.get('button')
+    expect(b.attributes('role')).toBe('combobox')
+    expect(b.attributes('aria-expanded')).toBe('false')
+    const key = async (k: string) => {
+      await b.trigger('keydown', { key: k })
+      await flushPromises()
+    }
+    await key('ArrowDown')
+    expect(b.attributes('aria-expanded')).toBe('true')
+    expect(document.getElementById(b.attributes('aria-controls')!)?.getAttribute('role')).toBe('listbox')
+    expect(active(b.element)).toBe('Newest')
+    await key('ArrowDown')
+    expect(active(b.element)).toBe('Longest')
+    await key('End')
+    expect(active(b.element)).toBe('Shortest')
+    await key('ArrowDown')
+    expect(active(b.element)).toBe('Shortest')
+    await key('Home')
+    expect(active(b.element)).toBe('Newest')
+    await key('s')
+    expect(active(b.element)).toBe('Shortest')
+    await key('Enter')
+    expect(w.emitted('update:modelValue')).toEqual([['short']])
+    expect(b.attributes('aria-expanded')).toBe('false')
+    await key('l')
+    expect(b.attributes('aria-expanded')).toBe('true')
+    expect(active(b.element)).toBe('Longest')
+    await key('Escape')
+    expect(b.attributes('aria-expanded')).toBe('false')
+    expect(w.emitted('update:modelValue')).toHaveLength(1)
     w.unmount()
   })
 })
@@ -480,5 +527,17 @@ describe('VxConfirm', () => {
     await w.setProps({ confirmIgnoreCase: true })
     expect(confirm().disabled).toBe(false)
     w.unmount()
+  })
+})
+
+describe('VxIcon', () => {
+  it('is hidden from assistive tech unless it has a title', () => {
+    const plain = mount(VxIcon, { props: { name: 'play' } })
+    expect(plain.attributes('aria-hidden')).toBe('true')
+    expect(plain.attributes('width')).toBe('18')
+    expect(plain.find('path.fill').exists()).toBe(true)
+    const named = mount(VxIcon, { props: { name: 'copy', title: 'Copy link', size: 26 } })
+    expect(named.attributes('aria-hidden')).toBeUndefined()
+    expect(named.attributes()).toMatchObject({ role: 'img', 'aria-label': 'Copy link', width: '26' })
   })
 })

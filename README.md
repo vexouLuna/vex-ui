@@ -63,6 +63,21 @@ const { show } = useToast()
 - Links use `RouterLink` when vue-router is installed and a plain `<a>` otherwise. The library doesn't depend on
   vue-router.
 - Every class and token is prefixed `vx-` / `--vx-`, so site CSS won't collide with it.
+- **vex-ui is dark-only by design.** Deep Field is a night sky: the tokens set `color-scheme: dark` and there is
+  no light set or `prefers-color-scheme` switch. A site that needs a light page uses its own look (keeki-vods) and
+  `@vex/ui/utils` for the logic.
+- Colours and type come from tokens (`src/styles/tokens.css`): washes `--vx-hover-faint` / `--vx-hover` /
+  `--vx-selected`, `--vx-scrim` behind dialogs, `--vx-on-bad` for text on a `--vx-bad` fill, and the UI text sizes
+  `--vx-text-xs` (11px, the smallest) / `-sm` 12 / `-md` 13 / `-lg` 14.
+- Next to `@vex/platform-web`'s plain-class buttons, the variants line up like this:
+
+  | `VxButton` / `.vx-btn` | `.vxp-btn` (platform-web) |
+  |---|---|
+  | `variant="primary"` / `.is-primary` | `.primary` |
+  | `variant="danger"` / `.is-danger` | `.danger` |
+  | `variant="danger-solid"` / `.is-danger-solid` | `.danger-solid` |
+  | `size="sm"` / `.is-sm` | `.sm` |
+  | `variant="ghost"`, `block`, `pressed`, `icon` | no equivalent |
 
 ### Signing in (`@vex/ui/account`)
 
@@ -99,11 +114,15 @@ on another site shows up; the app's unmount (or `account.dispose()`) removes tha
 | group | components |
 |---|---|
 | chrome | `VxSiteShell` `VxSiteHeader` `VxSiteFooter` `VxSiteSwitcher` `VxLockup` `VxAccountMenu` `VxAccount` `VxLink` |
-| controls | `VxButton` `VxInput` `VxField` `VxSelect` `VxStepper` `VxSwitch` `VxCheckbox` `VxRadioGroup` `VxSlider` `VxDateRange` `VxTabs` `VxSegmented` `VxPagination` `VxTagInput` |
+| controls | `VxButton` `VxInput` `VxField` `VxSelect` `VxStepper` `VxSwitch` `VxCheckbox` `VxRadioGroup` `VxSlider` `VxDateRange` `VxTabs` `VxSegmented` `VxPagination` `VxTagInput` `VxIcon` |
 | overlays | `VxPopover` `VxMenuItem` `VxMenuLabel` `VxMenuSeparator` `VxDialog` `VxToastHost` + `useToast()` `VxTooltip` |
 | feedback | `VxCallout` `VxProgress` `VxSpinner` `VxSkeleton` `VxEmptyState` |
 | data | `VxTable` `VxChip` `VxStatusDot` `VxUptimeBar` `VxAvatar` `VxKbd` |
 | media | `VxStarfield` `VxPosters` `VxChapterBar` `VxPlaceholder` |
+
+- Tab titles: `syncDocumentTitle(router, 'vexoul.net')` in `main.ts` sets `document.title` to
+  `"<page> · vexoul.net"` after each navigation, from the route's `meta: { title: 'OBS sources' }` (just the site on
+  a route without one). A page whose title depends on its data (a channel's name) sets `document.title` itself.
 
 Helpers are exported as well: `gameColor`, `twitchColor`, `pageRange`, `place` (popover placement), `stepValue`,
 `formatDuration`, and the seeded star generator.
@@ -140,7 +159,8 @@ that used to live here is still served at the `v0.1.0` tag until every site has 
 ## Rules
 
 - One control height (`--vx-ctl`, 32px; 26px small) for buttons, inputs, selects and the avatar, plus one
-  header height (48px) on every page, signed in or out.
+  header height (48px) on every page, signed in or out. On a touch screen (`pointer: coarse`) small controls and
+  segmented options are 32px too, so no tap target is smaller.
 - Icon buttons are square. State changes swap the icon or colour, never the size; confirmations show as a toast.
 - Popovers open towards free space, stay below the header and scroll when they don't fit.
 - **Mobile has the same functions as desktop.** Controls reflow and tables scroll sideways; nothing is hidden.
