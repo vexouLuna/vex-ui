@@ -23,6 +23,7 @@ const colours: [string, string][] = [
   ['bad', 'down, error, delete, LIVE'],
   ['on-bad', 'text on a bad fill (danger-solid, LIVE)'],
   ['info', 'pale star blue: neutral highlights, the accent outside a site'],
+  ['corruption', 'pink outside the status scale: altered or unusual (operators in command text)'],
   ['accent', "the current site's accent (switched by data-site)"],
   ['ring', 'focus rings and the selected outline'],
   ['hover-faint', 'resting wash: callouts, current menu item, row hover'],

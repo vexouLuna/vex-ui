@@ -30,6 +30,9 @@
   /* Each site's accent comes from its entry in src/sites.ts (--vx-accent-<id>, switched by data-site); this is the
      accent outside any site shell. --vx-info is the pale star blue for neutral highlights. */
   --vx-info: #d5e0ff;
+  /* Pink for something altered or out of the ordinary, outside the status scale (doomtp's operators in command text).
+     About 8.7:1 on --vx-bg, 7.6:1 on --vx-surface-2. */
+  --vx-corruption: #ff7ab2;
   --vx-accent: var(--vx-info);
 
   /* Glass panels and overlays */
