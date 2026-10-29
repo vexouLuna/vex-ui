@@ -110,3 +110,8 @@
   color-scheme: dark;
 }
 
+/* Touch screens: small controls grow to the full control height, so every tap target is at least 32px. Keyed on the
+   pointer, not the width, so a narrow desktop window keeps the compact rows and overlays in <body> follow too. */
+@media (pointer: coarse) {
+  :root { --vx-ctl-sm: var(--vx-ctl); }
+}

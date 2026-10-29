@@ -144,7 +144,8 @@ that used to live here is still served at the `v0.1.0` tag until every site has 
 ## Rules
 
 - One control height (`--vx-ctl`, 32px; 26px small) for buttons, inputs, selects and the avatar, plus one
-  header height (48px) on every page, signed in or out.
+  header height (48px) on every page, signed in or out. On a touch screen (`pointer: coarse`) small controls and
+  segmented options are 32px too, so no tap target is smaller.
 - Icon buttons are square. State changes swap the icon or colour, never the size; confirmations show as a toast.
 - Popovers open towards free space, stay below the header and scroll when they don't fit.
 - **Mobile has the same functions as desktop.** Controls reflow and tables scroll sideways; nothing is hidden.

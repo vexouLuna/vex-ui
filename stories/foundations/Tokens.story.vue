@@ -43,7 +43,7 @@ const hatches = [
   ['--vx-hatch-faint', 'the placeholder fill', 'transparent'],
 ]
 const sizes = [
-  ['--vx-ctl-sm', '26 · small controls'],
+  ['--vx-ctl-sm', '26 · small controls (32 on a touch screen)'],
   ['--vx-ctl', '32 · every control, avatar, icon button'],
   ['--vx-head-h', '48 · the header, on every page'],
 ]
