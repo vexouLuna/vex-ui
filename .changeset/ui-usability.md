@@ -12,3 +12,5 @@ Usability pass from the design review:
   select-only combobox with `aria-activedescendant`.
 - New tokens `--vx-hover-faint`, `--vx-selected`, `--vx-scrim` and `--vx-text-xs/sm/md/lg`; `components.css` uses
   them instead of raw colours and pixel sizes, and no UI text is below 11px (the 9px and 10px labels grew).
+- New control `VxIcon` (`name`, `size`, `title`): inline SVG line icons in `currentColor` for control buttons, with
+  the names in `VX_ICONS` (the watch page's set from vods-core). Decorative unless it has a `title`.

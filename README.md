@@ -114,7 +114,7 @@ on another site shows up; the app's unmount (or `account.dispose()`) removes tha
 | group | components |
 |---|---|
 | chrome | `VxSiteShell` `VxSiteHeader` `VxSiteFooter` `VxSiteSwitcher` `VxLockup` `VxAccountMenu` `VxAccount` `VxLink` |
-| controls | `VxButton` `VxInput` `VxField` `VxSelect` `VxStepper` `VxSwitch` `VxCheckbox` `VxRadioGroup` `VxSlider` `VxDateRange` `VxTabs` `VxSegmented` `VxPagination` `VxTagInput` |
+| controls | `VxButton` `VxInput` `VxField` `VxSelect` `VxStepper` `VxSwitch` `VxCheckbox` `VxRadioGroup` `VxSlider` `VxDateRange` `VxTabs` `VxSegmented` `VxPagination` `VxTagInput` `VxIcon` |
 | overlays | `VxPopover` `VxMenuItem` `VxMenuLabel` `VxMenuSeparator` `VxDialog` `VxToastHost` + `useToast()` `VxTooltip` |
 | feedback | `VxCallout` `VxProgress` `VxSpinner` `VxSkeleton` `VxEmptyState` |
 | data | `VxTable` `VxChip` `VxStatusDot` `VxUptimeBar` `VxAvatar` `VxKbd` |

@@ -38,6 +38,8 @@
 /* Icon buttons are always square; changing state swaps the icon, never the size */
 .vx-btn.is-icon { width: var(--vx-ctl); padding: 0; }
 .vx-btn.is-icon.is-sm { width: var(--vx-ctl-sm); }
+.vx-icon { display: block; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vx-icon .fill { fill: currentColor; stroke: none; }
 .vx-btn.is-block { width: 100%; }
 .vx-btn:disabled, .vx-btn[aria-disabled='true'] { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 .vx-btn .vx-caret { color: var(--vx-muted); font-size: var(--vx-text-xs); margin-left: 2px; }
