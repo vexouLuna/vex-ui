@@ -29,7 +29,7 @@ const sorts = [
               <template #icon>⌕</template>
             </VxInput>
           </VxField>
-          <VxField v-slot="{ id }" label="Sort">
+          <VxField v-slot="{ id }" label="Sort" help="Keyboard: focus it, then ↑ ↓ Home End or type a letter; Enter picks, Esc closes.">
             <VxSelect :id="id" v-model="f.sort" :options="sorts" />
           </VxField>
           <VxField v-slot="{ id }" label="Chat delay" help="0.1s steps; shift-click for 1s.">
