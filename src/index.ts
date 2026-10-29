@@ -104,6 +104,7 @@ export { createNoise, type Noise2 } from './utils/perlin'
 export { generateStars, STARFIELD_DEFAULTS, SPECTRA, METEOR_GAPS, type StarfieldOptions, type Star, type Spectrum, type MeteorRate } from './utils/starfield'
 export { formatDuration, timeAgo } from './utils/time'
 export { isoDate, isoDateTime, monthGrid, parseDate, showDate } from './utils/date'
+export { syncDocumentTitle, type TitleRouter } from './utils/title'
 
 // Types
 export * from './types'

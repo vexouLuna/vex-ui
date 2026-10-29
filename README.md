@@ -105,6 +105,10 @@ on another site shows up; the app's unmount (or `account.dispose()`) removes tha
 | data | `VxTable` `VxChip` `VxStatusDot` `VxUptimeBar` `VxAvatar` `VxKbd` |
 | media | `VxStarfield` `VxPosters` `VxChapterBar` `VxPlaceholder` |
 
+- Tab titles: `syncDocumentTitle(router, 'vexoul.net')` in `main.ts` sets `document.title` to
+  `"<page> · vexoul.net"` after each navigation, from the route's `meta: { title: 'OBS sources' }` (just the site on
+  a route without one). A page whose title depends on its data (a channel's name) sets `document.title` itself.
+
 Helpers are exported as well: `gameColor`, `twitchColor`, `pageRange`, `place` (popover placement), `stepValue`,
 `formatDuration`, and the seeded star generator.
 
