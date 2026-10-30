@@ -11,7 +11,7 @@
 import { computed, inject, readonly, ref, type App, type ComputedRef, type InjectionKey, type Ref } from 'vue'
 import type { AccountUser } from './types'
 
-/** The signed-in user, as vex-auth's `/v1/me` answers. */
+/** The signed-in user, as vex-auth's `/v2/me` answers. */
 export interface AuthUser {
   id: string
   login: string
@@ -29,9 +29,9 @@ export interface Account {
   readonly user: Readonly<Ref<AuthUser | null>>
   /** `user` in the shape VxAccountMenu takes. */
   readonly menuUser: ComputedRef<AccountUser | null>
-  /** True once the first `/v1/me` answered (or failed): until then a signed-out look may be wrong. */
+  /** True once the first `/v2/me` answered (or failed): until then a signed-out look may be wrong. */
   readonly ready: Readonly<Ref<boolean>>
-  /** The CSRF token writes to the service must send as `X-Vex-CSRF`; null when signed out. */
+  /** The CSRF token writes to the service must send as `X-CSRF-Token`; null when signed out. */
   csrf(): string | null
   /** Asks the service who is signed in. A failed request keeps what was known. */
   refresh(): Promise<AuthUser | null>
@@ -47,7 +47,7 @@ export interface Account {
   dispose(): void
 }
 
-export const CSRF_HEADER = 'X-Vex-CSRF'
+export const CSRF_HEADER = 'X-CSRF-Token'
 export const ACCOUNT_KEY: InjectionKey<Account> = Symbol('vx-account')
 /** How stale the known user may be before a tab coming back into view asks again. */
 export const RECHECK_MS = 60_000
@@ -102,14 +102,14 @@ export function createAccount(options: AccountOptions = {}): Account {
 
   async function check(): Promise<AuthUser | null> {
     try {
-      const res = await request('/v1/me', { headers: { Accept: 'application/json' } })
+      const res = await request('/v2/me', { headers: { Accept: 'application/json' } })
       if (res.ok) {
         const body = await res.json()
         token = body.csrf ?? null
         user.value = {
           id: String(body.id),
           login: body.login,
-          displayName: body.displayName || body.login,
+          displayName: body.display_name || body.login,
           avatar: body.avatar ?? null,
           color: body.color ?? null,
         }
@@ -141,7 +141,7 @@ export function createAccount(options: AccountOptions = {}): Account {
   async function signOut(opts: { everywhere?: boolean } = {}) {
     if (!enabled) return
     try {
-      await request(opts.everywhere ? '/v1/logout?everywhere=1' : '/v1/logout', { method: 'POST' })
+      await request(opts.everywhere ? '/v2/logout?everywhere=1' : '/v2/logout', { method: 'POST' })
     } finally {
       token = null
       user.value = null
