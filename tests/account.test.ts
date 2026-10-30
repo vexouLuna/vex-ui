@@ -6,7 +6,7 @@ import VxAccount from '../src/components/chrome/VxAccount.vue'
 
 afterEach(() => vi.unstubAllEnvs())
 
-const ME = { id: '42', login: 'vex', displayName: 'Vex', avatar: 'https://img/a.png', color: '#ff0000', csrf: 't0k', expiresAt: 'x' }
+const ME = { id: '42', login: 'vex', display_name: 'Vex', avatar: 'https://img/a.png', color: '#ff0000', csrf: 't0k', expires_at: 'x' }
 
 function json(status: number, body: unknown = {}) {
   return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } })
@@ -48,7 +48,7 @@ describe('createAccount', () => {
     const account = createAccount({ authBase: 'https://auth.example/', fetch })
     expect(account.ready.value).toBe(false)
     const user = await account.refresh()
-    expect(calls[0].url).toBe('https://auth.example/v1/me')
+    expect(calls[0].url).toBe('https://auth.example/v2/me')
     expect(calls[0].init.credentials).toBe('include')
     expect(user).toEqual({ id: '42', login: 'vex', displayName: 'Vex', avatar: 'https://img/a.png', color: '#ff0000' })
     expect(account.menuUser.value).toEqual({ name: 'Vex', color: '#ff0000', avatar: 'https://img/a.png' })
@@ -89,7 +89,7 @@ describe('createAccount', () => {
     const account = createAccount({ authBase: 'https://auth.example', fetch })
     await account.refresh()
     await account.signOut({ everywhere: true })
-    expect(calls[1].url).toBe('https://auth.example/v1/logout?everywhere=1')
+    expect(calls[1].url).toBe('https://auth.example/v2/logout?everywhere=1')
     expect(calls[1].init.method).toBe('POST')
     expect(new Headers(calls[1].init.headers).get(CSRF_HEADER)).toBe('t0k')
     expect(account.user.value).toBeNull()
@@ -99,8 +99,8 @@ describe('createAccount', () => {
     const { fetch, calls } = service(() => json(200, ME))
     const account = createAccount({ authBase: 'https://auth.example', fetch })
     await account.refresh()
-    await account.request('/v1/progress')
-    await account.request('/v1/progress/1', { method: 'PUT', body: '{}' })
+    await account.request('/v2/progress')
+    await account.request('/v2/progress/1', { method: 'PUT', body: '{}' })
     expect(new Headers(calls[1].init.headers).has(CSRF_HEADER)).toBe(false)
     expect(new Headers(calls[2].init.headers).get(CSRF_HEADER)).toBe('t0k')
   })
