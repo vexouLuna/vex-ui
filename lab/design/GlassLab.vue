@@ -37,7 +37,8 @@ function bands(c) {
     const [s0, s1] = [start.toFixed(1), (start + w).toFixed(1)]
     stops.push(`transparent ${s0}px`, `rgb(255 255 255 / ${a.toFixed(3)}) ${s0}px ${s1}px`, `transparent ${s1}px`)
   }
-  return `repeating-linear-gradient(120deg, ${stops.join(', ')}, transparent ${period}px)`
+  // The repeat is last stop minus first stop, so pin both ends: 0 and the period.
+  return `repeating-linear-gradient(120deg, transparent 0, ${stops.join(', ')}, transparent ${period}px)`
 }
 const white = (a) => `rgb(255 255 255 / ${a / 100})`
 const vars = (c) => ({

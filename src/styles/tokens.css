@@ -54,9 +54,10 @@
   /* Window reflection strength: about the brightest band's opacity; each band is a fixed fraction of it. */
   --vx-glass-streak: 0.04;
   /* Window reflections: 16 seeded bands per 1600px at 120deg (lab: bands 16, max width 55px, seed 15). At 120deg
-     one period spans 3200px vertically, so .vx-panel tiles it 3200px tall and it loops without a seam. Copy a new
-     set from the lab rather than editing these stops by hand. */
-  --vx-glass-reflect: repeating-linear-gradient(120deg,
+     one period spans 3200px vertically, so .vx-panel tiles it 3200px tall and it loops without a seam. The period is
+     last stop minus first stop, so the list must start at 0 and end at 1600px. Copy a new set from the lab rather
+     than editing these stops by hand. */
+  --vx-glass-reflect: repeating-linear-gradient(120deg, transparent 0,
     transparent 34.3px, rgb(255 255 255 / calc(var(--vx-glass-streak) * 0.62)) 34.3px 49.4px, transparent 49.4px,
     transparent 116.4px, rgb(255 255 255 / calc(var(--vx-glass-streak) * 0.78)) 116.4px 142.9px, transparent 142.9px,
     transparent 214.2px, rgb(255 255 255 / calc(var(--vx-glass-streak) * 0.40)) 214.2px 267.8px, transparent 267.8px,
