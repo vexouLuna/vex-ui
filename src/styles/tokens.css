@@ -20,6 +20,8 @@
   --vx-line: #26262c;
   --vx-ok: #8fd694;
   --vx-warn: #e8c35a;
+  /* Lime between ok and warn: a little downtime, still fine (a grid cell with under a third of it down). */
+  --vx-partial: #bfd27a;
   /* Amber between warn and bad: worse than degraded, not yet down (e.g. a service down most of an hour). */
   --vx-caution: #f2994a;
   --vx-bad: #ff6b5e;
