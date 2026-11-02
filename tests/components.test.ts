@@ -582,7 +582,7 @@ describe('VxDialog', () => {
   it('Escape on a popover trigger closes the popover, not the dialog', async () => {
     const w = mount(VxDialog, {
       props: { open: true, title: 'T' },
-      slots: { default: '<VxPopover ref="p"><template #trigger="{ toggle }"><button id="trg" @click="toggle">m</button></template>x</VxPopover>' },
+      slots: { default: '<VxPopover ref="p"><template #trigger="{ toggle, open }"><button id="trg" :aria-expanded="open" @click="toggle">m</button></template>x</VxPopover>' },
       global: { components: { VxPopover } },
       attachTo: document.body,
     })

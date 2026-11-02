@@ -20,8 +20,8 @@ function close() {
 
 function onKey(e: KeyboardEvent) {
   if (e.key === 'Escape') {
-    // An open popover (focus on its trigger) closes itself on Escape at the document; leave the dialog open.
-    if (document.querySelector('.vx-popover-panel')) return
+    // An open popover (focus on its trigger, aria-expanded) closes itself on Escape at the document; leave the dialog open.
+    if ((e.target as Element).getAttribute?.('aria-expanded') === 'true') return
     e.stopPropagation()
     close()
   } else if (e.key === 'Tab' && box.value) {
