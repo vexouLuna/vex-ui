@@ -21,8 +21,11 @@ function press(dir: 1 | -1, e: MouseEvent) {
   model.value = stepValue(model.value, dir, { step: props.step, min: props.min, max: props.max, big: e.shiftKey })
 }
 function typed(e: Event) {
-  const v = (e.target as HTMLInputElement).valueAsNumber
+  const input = e.target as HTMLInputElement
+  const v = input.valueAsNumber
   if (Number.isFinite(v)) model.value = clamp(Number(v.toFixed(decimalsOf(props.step))), props.min, props.max)
+  // A value that clamps back to the model changes nothing, so Vue never re-renders: put the field back by hand.
+  input.value = String(model.value)
 }
 </script>
 
