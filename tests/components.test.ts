@@ -19,6 +19,7 @@ import VxLoadState from '../src/components/feedback/VxLoadState.vue'
 import VxAccountMenu from '../src/components/chrome/VxAccountMenu.vue'
 import VxSiteHeader from '../src/components/chrome/VxSiteHeader.vue'
 import VxNavBar from '../src/components/chrome/VxNavBar.vue'
+import VxDialog from '../src/components/overlays/VxDialog.vue'
 import VxTooltip from '../src/components/overlays/VxTooltip.vue'
 import { useToast } from '../src/composables/useToast'
 
@@ -539,5 +540,61 @@ describe('VxIcon', () => {
     const named = mount(VxIcon, { props: { name: 'copy', title: 'Copy link', size: 26 } })
     expect(named.attributes('aria-hidden')).toBeUndefined()
     expect(named.attributes()).toMatchObject({ role: 'img', 'aria-label': 'Copy link', width: '26' })
+  })
+})
+
+describe('VxTooltip describedby', () => {
+  afterEach(() => { document.body.innerHTML = '' })
+  it('links the focused trigger to the bubble', async () => {
+    const w = mount(VxTooltip, { props: { text: 'Hint' }, slots: { default: '<button>x</button>' }, attachTo: document.body })
+    await w.get('button').trigger('focusin')
+    await nextTick()
+    const bubble = document.body.querySelector('.vx-tooltip-bubble')!
+    expect(w.get('button').attributes('aria-describedby')).toBe(bubble.id)
+    await w.get('button').trigger('focusout')
+    expect(w.get('button').attributes('aria-describedby')).toBeUndefined()
+  })
+})
+
+describe('VxStepper typed value', () => {
+  it('resets the field when a typed value clamps to the current model', async () => {
+    const w = mount(VxStepper, { props: { modelValue: 100, max: 100 } })
+    const input = w.get('input')
+    ;(input.element as HTMLInputElement).value = '150'
+    await input.trigger('change')
+    await nextTick()
+    expect((input.element as HTMLInputElement).value).toBe('100')
+  })
+})
+
+describe('VxDialog', () => {
+  afterEach(() => { document.body.innerHTML = '' })
+  it('focuses into a dialog mounted already open', async () => {
+    const opener = document.createElement('button')
+    document.body.append(opener)
+    opener.focus()
+    const w = mount(VxDialog, { props: { open: true, title: 'T' }, slots: { default: '<input id="in">' }, attachTo: document.body })
+    await flushPromises()
+    expect(document.activeElement?.id).toBe('in')
+    w.unmount()
+    expect(document.activeElement).toBe(opener)
+  })
+  it('Escape on a popover trigger closes the popover, not the dialog', async () => {
+    const w = mount(VxDialog, {
+      props: { open: true, title: 'T' },
+      slots: { default: '<VxPopover ref="p"><template #trigger="{ toggle, open }"><button id="trg" :aria-expanded="open" @click="toggle">m</button></template>x</VxPopover>' },
+      global: { components: { VxPopover } },
+      attachTo: document.body,
+    })
+    await flushPromises()
+    const trg = document.getElementById('trg')!
+    trg.focus()
+    trg.click()
+    await flushPromises()
+    expect(document.querySelector('.vx-popover-panel')).not.toBeNull()
+    trg.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await flushPromises()
+    expect(document.querySelector('.vx-popover-panel')).toBeNull()
+    expect(w.emitted('update:open')).toBeUndefined()
   })
 })

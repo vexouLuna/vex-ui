@@ -20,6 +20,8 @@ function close() {
 
 function onKey(e: KeyboardEvent) {
   if (e.key === 'Escape') {
+    // An open popover (focus on its trigger, aria-expanded) closes itself on Escape at the document; leave the dialog open.
+    if ((e.target as Element).getAttribute?.('aria-expanded') === 'true') return
     e.stopPropagation()
     close()
   } else if (e.key === 'Tab' && box.value) {
@@ -36,7 +38,7 @@ function onKey(e: KeyboardEvent) {
   }
 }
 
-watch(open, async (v) => {
+const onOpenChange = async (v: boolean) => {
   if (v) {
     returnTo = document.activeElement as HTMLElement | null
     await nextTick()
@@ -46,7 +48,8 @@ watch(open, async (v) => {
     returnTo?.focus?.()
     returnTo = null
   }
-})
+}
+watch(open, onOpenChange, { immediate: true })
 onUnmounted(() => returnTo?.focus?.())
 </script>
 
