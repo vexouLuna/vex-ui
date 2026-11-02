@@ -1,5 +1,12 @@
 # @vex/ui
 
+## 0.36.0
+
+### Minor Changes
+
+- 4ff3921: Opt-in phone layout for docs: `.vx-table.is-stack` stacks a table's rows below 600px (cells with `data-label` get their label), and `.vx-wrap-code` on a page or section wraps its `.vx-code` blocks, with `.vx-code.is-scroll` to keep one scrolling.
+- 4916327: Add the `--vx-partial` token, a lime between `--vx-ok` and `--vx-warn`, for a little downtime that is still fine.
+
 ## 0.35.2
 
 ### Patch Changes
