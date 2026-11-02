@@ -132,6 +132,31 @@ const toggle = (g: string) => (filters.value = filters.value.includes(g) ? filte
         <p class="story-note"><code>headless</code>: no header row</p>
       </StoryFrame>
     </Variant>
+    <Variant title="Docs: tables stack, code wraps on phones">
+      <StoryFrame site="dtp" class="vx-wrap-code">
+        <table class="vx-table is-stack">
+          <thead><tr><th>Operator</th><th>Meaning</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>|</code></td><td>Pipe: the left result becomes the right command's input. Stops if the left fails.</td><td><code>!random 1-6 | echo you rolled {_1}</code></td></tr>
+            <tr><td><code>&amp;&amp;</code></td><td>Run the right side only if the left succeeded.</td><td><code>!var incr channel.deaths &amp;&amp; echo oof</code></td></tr>
+          </tbody>
+        </table>
+        <p class="story-note"><code>is-stack</code> (try ~390px): each row becomes a block under its first cell</p>
+        <table class="vx-table is-stack">
+          <thead><tr><th>Channel</th><th>Tier</th><th class="is-right">Lines today</th><th class="is-right">Runs today</th></tr></thead>
+          <tbody>
+            <tr><td>#vexouluna</td><td data-label="Tier">full</td><td class="is-right is-mono" data-label="Lines today">1,204</td><td class="is-right is-mono" data-label="Runs today">88</td></tr>
+            <tr><td>#doomtp</td><td data-label="Tier">basic</td><td class="is-right is-mono" data-label="Lines today">312</td><td class="is-right is-mono" data-label="Runs today">9</td></tr>
+          </tbody>
+        </table>
+        <p class="story-note"><code>data-label</code> on a cell puts the label in front, two values to a line</p>
+        <pre class="vx-code">!filter add word slur tag insult   # replaces it with [insult]
+!filter add regex \d{9,} block     # blocks the whole message</pre>
+        <pre class="vx-code is-scroll">line   ::= sign? pipeline ( ( "&amp;&amp;" | "||" ) pipeline )*
+pipeline ::= command ( "|" command )* ( "->" | "-->" ) target?</pre>
+        <p class="story-note"><code>vx-wrap-code</code> on the frame: code wraps on phones; <code>is-scroll</code> keeps the grammar block scrolling</p>
+      </StoryFrame>
+    </Variant>
     <Variant title="Chips & status">
       <StoryFrame site="vods">
         <div class="story-col">
