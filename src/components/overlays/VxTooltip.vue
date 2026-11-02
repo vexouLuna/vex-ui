@@ -36,6 +36,12 @@ function listen(on: boolean) {
   window[method]('scroll', hide, { capture: true, passive: true } as AddEventListenerOptions)
 }
 watch(shown, listen)
+// The wrapper span can't take focus, so the focused trigger (the slot's first element) carries the link to the bubble.
+watch(shown, (on) => {
+  const trigger = root.value?.firstElementChild
+  if (on) trigger?.setAttribute('aria-describedby', id)
+  else trigger?.removeAttribute('aria-describedby')
+})
 onScopeDispose(() => listen(false))
 </script>
 
@@ -43,7 +49,6 @@ onScopeDispose(() => listen(false))
   <span
     ref="root"
     class="vx-tooltip"
-    :aria-describedby="shown ? id : undefined"
     @pointerenter="show"
     @pointerleave="hide"
     @focusin="show"
