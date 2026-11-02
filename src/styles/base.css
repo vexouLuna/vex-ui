@@ -128,6 +128,11 @@ html[data-site], html[data-site] > body { margin: 0; background: var(--vx-bg); }
   border-radius: var(--vx-radius-sm);
   box-shadow: var(--vx-glass-edge);
 }
+/* `vx-wrap-code` (opt-in, on a page or section): on a phone its code blocks wrap instead of scrolling sideways.
+   A block whose layout is its meaning (a grammar, ASCII art) keeps scrolling with `is-scroll`. */
+@container vx-site (max-width: 600px) {
+  .vx-wrap-code .vx-code:not(.is-scroll) { white-space: pre-wrap; overflow-wrap: anywhere; }
+}
 .vx-tok-prefix, .vx-tok-cmd { color: var(--vx-accent); font-weight: 600; }
 .vx-tok-op { color: var(--vx-bad); font-weight: 600; }
 .vx-tok-ph { color: var(--vx-info); }
