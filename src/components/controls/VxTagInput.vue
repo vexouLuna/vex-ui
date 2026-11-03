@@ -139,7 +139,7 @@ function onKey(e: KeyboardEvent) {
       } else if (e.key === 'Enter' && props.allowNew && text.value.trim()) {
         e.preventDefault()
         if (add(text.value) < 0) text.value = ''
-      }
+      } else if (e.key === 'Tab') open.value = false
       break
     case ',':
       if (props.allowNew) {

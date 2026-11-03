@@ -54,6 +54,17 @@ describe('VxTagInput', () => {
     expect(model(w)).toEqual(['doom', 'irl'])
   })
 
+  it('closes the list when Tab leaves a free-text entry', async () => {
+    const w = make({ options, allowNew: true })
+    const input = w.get('input')
+    await input.setValue('d')
+    await settle()
+    expect(input.attributes('aria-expanded')).toBe('true')
+    await input.trigger('keydown', { key: 'Tab' })
+    await settle()
+    expect(input.attributes('aria-expanded')).toBe('false')
+  })
+
   it('wraps upward from the first option and closes on Escape', async () => {
     const w = make({ options })
     const input = w.get('input')

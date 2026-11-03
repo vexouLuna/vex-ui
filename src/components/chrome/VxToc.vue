@@ -26,9 +26,11 @@ let heads: HTMLElement[] = []
 
 const slug = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'section'
 
+const find = (root: Element | null) =>
+  root ? [...root.querySelectorAll<HTMLElement>(props.headings)].filter((h) => h.textContent?.trim()) : []
+
 function scan() {
-  const root = document.querySelector(props.scope)
-  heads = root ? [...root.querySelectorAll<HTMLElement>(props.headings)].filter((h) => h.textContent?.trim()) : []
+  heads = find(document.querySelector(props.scope))
   const used = new Set<string>()
   for (const h of heads) {
     if (!h.id) {
@@ -63,7 +65,7 @@ onMounted(() => {
   const root = document.querySelector(props.scope)
   if (root) {
     mutations = new MutationObserver(() => {
-      if (root.querySelectorAll(props.headings).length !== heads.length) scan()
+      if (find(root).length !== heads.length) scan()
     })
     mutations.observe(root, { childList: true, subtree: true })
   }

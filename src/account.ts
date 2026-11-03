@@ -91,6 +91,8 @@ export function createAccount(options: AccountOptions = {}): Account {
   let token: string | null = null
   let checkedAt = -Infinity
   let pending: Promise<AuthUser | null> | null = null
+  /** Bumped on sign-out, so a /v2/me answer that was in flight before it can't sign the user back in. */
+  let epoch = 0
   let onVisible: (() => void) | null = null
 
   function request(path: string, init: RequestInit = {}): Promise<Response> {
@@ -101,10 +103,13 @@ export function createAccount(options: AccountOptions = {}): Account {
   }
 
   async function check(): Promise<AuthUser | null> {
+    const started = epoch
     try {
       const res = await request('/v2/me', { headers: { Accept: 'application/json' } })
+      if (started !== epoch) return user.value
       if (res.ok) {
         const body = await res.json()
+        if (started !== epoch) return user.value
         token = body.csrf ?? null
         user.value = {
           id: String(body.id),
@@ -140,12 +145,17 @@ export function createAccount(options: AccountOptions = {}): Account {
 
   async function signOut(opts: { everywhere?: boolean } = {}) {
     if (!enabled) return
+    // Only a logout the service accepted (or a session it already lost: 401) signs the UI out; otherwise the
+    // session is still alive and the next check would sign the user straight back in.
     try {
-      await request(opts.everywhere ? '/v2/logout?everywhere=1' : '/v2/logout', { method: 'POST' })
-    } finally {
-      token = null
-      user.value = null
+      const res = await request(opts.everywhere ? '/v2/logout?everywhere=1' : '/v2/logout', { method: 'POST' })
+      if (!res.ok && res.status !== 401) return
+    } catch {
+      return
     }
+    epoch++
+    token = null
+    user.value = null
   }
 
   const account: Account = {
