@@ -37,8 +37,9 @@ export interface Account {
   refresh(): Promise<AuthUser | null>
   /** Sends the page through Twitch (or straight back, if already signed in) to `returnTo` (default: here). */
   signIn(returnTo?: string): void
-  /** Ends this browser's session, or every session of the user on every site. */
-  signOut(opts?: { everywhere?: boolean }): Promise<void>
+  /** Ends this browser's session, or every session of the user on every site. Resolves true once signed out, false if
+   * the service refused or couldn't be reached (the user stays signed in, so the caller can say so). */
+  signOut(opts?: { everywhere?: boolean }): Promise<boolean>
   /** A credentialed request to the service, with the CSRF header on writes. */
   request(path: string, init?: RequestInit): Promise<Response>
   /** Provides the account to the app and, when enabled, checks who is signed in and rechecks on tab return. */
@@ -143,19 +144,20 @@ export function createAccount(options: AccountOptions = {}): Account {
     navigate(`${base}/login?return=${encodeURIComponent(back)}`)
   }
 
-  async function signOut(opts: { everywhere?: boolean } = {}) {
-    if (!enabled) return
+  async function signOut(opts: { everywhere?: boolean } = {}): Promise<boolean> {
+    if (!enabled) return true
     // Only a logout the service accepted (or a session it already lost: 401) signs the UI out; otherwise the
     // session is still alive and the next check would sign the user straight back in.
     try {
       const res = await request(opts.everywhere ? '/v2/logout?everywhere=1' : '/v2/logout', { method: 'POST' })
-      if (!res.ok && res.status !== 401) return
+      if (!res.ok && res.status !== 401) return false
     } catch {
-      return
+      return false
     }
     epoch++
     token = null
     user.value = null
+    return true
   }
 
   const account: Account = {

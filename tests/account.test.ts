@@ -101,7 +101,7 @@ describe('createAccount', () => {
       const { fetch } = service(() => (n++ === 0 ? json(200, ME) : answer()))
       const account = createAccount({ authBase: 'https://auth.example', fetch })
       await account.refresh()
-      await expect(account.signOut()).resolves.toBeUndefined()
+      await expect(account.signOut()).resolves.toBe(signedOut)
       expect(account.user.value === null).toBe(signedOut)
     }
   })
