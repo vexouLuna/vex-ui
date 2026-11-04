@@ -1,5 +1,12 @@
 # @vex/ui
 
+## 0.36.1
+
+### Patch Changes
+
+- 8769bc2: Fix bug-hunt findings: `signOut` only signs the UI out when the service accepted the logout (or the session was already gone), and now resolves `true` when signed out and `false` when not, so callers can show an error, and a `/v2/me` answer in flight during sign-out no longer signs the user back in; `VxButton` as a link emits `click`; `VxTagInput` closes its list on Tab; `VxDateRange` presets count calendar days across DST changes; `VxToc` no longer rescans on every mutation when a heading is empty.
+- 48c2a17: VxIcon: `settings` is a gear (it read as a sun or a light), and a new `back` chevron.
+
 ## 0.36.0
 
 ### Minor Changes
