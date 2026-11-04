@@ -46,6 +46,7 @@ const classes = () => [
     :external="external"
     :title="label"
     :aria-label="icon ? label : undefined"
+    @click="$emit('click', $event)"
   ><slot></slot></VxLink>
   <button
     v-else
