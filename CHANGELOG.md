@@ -1,5 +1,11 @@
 # @vex/ui
 
+## 0.36.2
+
+### Patch Changes
+
+- 699ceb5: Bump `@vex/platform-web` to v0.15.0 (job dismiss/retry and schedules).
+
 ## 0.36.1
 
 ### Patch Changes
