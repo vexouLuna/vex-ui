@@ -24,7 +24,9 @@ function apply(p: DatePreset) {
     from.value = `${now.getFullYear()}-01-01`
     to.value = iso(now)
   } else {
-    from.value = iso(new Date(now.getTime() - p.days * 86400000))
+    const start = new Date(now)
+    start.setDate(start.getDate() - p.days) // calendar days: 24h steps are off by one across a DST change
+    from.value = iso(start)
     to.value = iso(now)
   }
 }

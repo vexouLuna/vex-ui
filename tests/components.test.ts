@@ -1,6 +1,8 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import VxDateRange from '../src/components/controls/VxDateRange.vue'
+import VxToc from '../src/components/chrome/VxToc.vue'
 import VxButton from '../src/components/controls/VxButton.vue'
 import VxInput from '../src/components/controls/VxInput.vue'
 import VxSaveBar from '../src/components/controls/VxSaveBar.vue'
@@ -596,5 +598,40 @@ describe('VxDialog', () => {
     await flushPromises()
     expect(document.querySelector('.vx-popover-panel')).toBeNull()
     expect(w.emitted('update:open')).toBeUndefined()
+  })
+})
+
+describe('VxButton as a link', () => {
+  it('emits click', async () => {
+    const onClick = vi.fn()
+    const w = mount(VxButton, { props: { href: '/x', onClick }, slots: { default: 'Go' } })
+    await w.get('a').trigger('click')
+    expect(onClick).toHaveBeenCalledOnce()
+  })
+})
+
+describe('VxDateRange presets', () => {
+  it('counts calendar days across a DST change', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 2, 10, 0, 30)) // 00:30 local, days after a spring-forward in most zones
+    const w = mount(VxDateRange, { props: { from: '', to: '', presets: [{ label: '7 days', days: 7 }] } })
+    await w.findAll('button').find((b) => b.text().includes('7'))!.trigger('click')
+    expect(w.emitted('update:from')![0]).toEqual(['2026-03-03'])
+    vi.useRealTimers()
+  })
+})
+
+describe('VxToc', () => {
+  it('does not rescan on mutations when a heading is empty', async () => {
+    document.body.innerHTML = '<main class="vx-main"><h2>One</h2><h2></h2></main>'
+    let scans = 0
+    vi.stubGlobal('IntersectionObserver', class { constructor() { scans++ } observe() {} disconnect() {} })
+    const w = mount(VxToc)
+    const before = scans
+    document.querySelector('.vx-main')!.append(document.createElement('p'))
+    await new Promise((r) => setTimeout(r, 0))
+    expect(scans).toBe(before)
+    w.unmount()
+    vi.unstubAllGlobals()
   })
 })

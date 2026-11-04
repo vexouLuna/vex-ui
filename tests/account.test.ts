@@ -95,6 +95,30 @@ describe('createAccount', () => {
     expect(account.user.value).toBeNull()
   })
 
+  it('stays signed in when the logout fails, and signs out when the session was already gone', async () => {
+    for (const [answer, signedOut] of [[() => json(500), false], [() => Promise.reject(new Error('offline')), false], [() => json(401), true]] as const) {
+      let n = 0
+      const { fetch } = service(() => (n++ === 0 ? json(200, ME) : answer()))
+      const account = createAccount({ authBase: 'https://auth.example', fetch })
+      await account.refresh()
+      await expect(account.signOut()).resolves.toBe(signedOut)
+      expect(account.user.value === null).toBe(signedOut)
+    }
+  })
+
+  it('ignores a /v2/me answer that was in flight when the user signed out', async () => {
+    let release!: (r: Response) => void
+    let n = 0
+    const { fetch } = service(() => (n++ === 0 ? new Promise<Response>((r) => (release = r)) : new Response(null, { status: 204 })))
+    const account = createAccount({ authBase: 'https://auth.example', fetch })
+    const checking = account.refresh()
+    await account.signOut()
+    release(json(200, ME))
+    await checking
+    expect(account.user.value).toBeNull()
+    expect(account.csrf()).toBeNull()
+  })
+
   it('sends the CSRF header on writes only', async () => {
     const { fetch, calls } = service(() => json(200, ME))
     const account = createAccount({ authBase: 'https://auth.example', fetch })
