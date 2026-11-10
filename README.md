@@ -1,5 +1,11 @@
 # vex-ui
 
+<!-- conventions:begin: synced from vexouLuna/conventions; edit it there, then run `conventions sync` -->
+[![CI](https://github.com/vexouLuna/vex-ui/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/vexouLuna/vex-ui/actions/workflows/ci.yml?query=branch%3Amain)
+[![version](https://img.shields.io/github/v/tag/vexouLuna/vex-ui?sort=semver&label=version)](https://github.com/vexouLuna/vex-ui/tags)
+[![conventions v4.0.0](https://img.shields.io/badge/conventions-v4.0.0-blue)](https://github.com/vexouLuna/conventions/tree/v4.0.0)
+<!-- conventions:end -->
+
 Shared design for every `*.vexoul.net` site ("Deep Field"). The repo holds two things:
 
 - **`@vex/ui`** (`src/`): the library the sites use. Tokens, base styles and Vue 3 + TypeScript components,
