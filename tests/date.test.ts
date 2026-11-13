@@ -82,6 +82,20 @@ describe('VxDateInput', () => {
     w.unmount()
   })
 
+  it('flags unusable text natively and blocks Enter, so a form keeps the old date', async () => {
+    const w = field({ modelValue: '2026-10-01' })
+    const el = w.get('input').element as HTMLInputElement
+    await w.get('input').setValue('2026-13-45')
+    expect(el.validity.customError).toBe(true)
+    expect(w.emitted('invalid-change')?.at(-1)).toEqual([true])
+    const ev = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true })
+    el.dispatchEvent(ev)
+    expect(ev.defaultPrevented).toBe(true)
+    await w.get('input').setValue('2026-10-02')
+    expect(el.validity.customError).toBe(false)
+    w.unmount()
+  })
+
   it('shows date and time with a space and stores the native shape', async () => {
     const w = field({ time: true, modelValue: '2026-10-23T14:05' })
     expect((w.get('input').element as HTMLInputElement).value).toBe('2026-10-23 14:05')
