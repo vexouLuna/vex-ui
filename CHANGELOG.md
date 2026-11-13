@@ -1,5 +1,11 @@
 # @vex/ui
 
+## 0.36.3
+
+### Patch Changes
+
+- 462cf07: VxDateInput blocks form submit (setCustomValidity, Enter) while its text isn't a valid date and emits `invalid-change`; error toasts last 6 s, pause on hover/focus, and aren't evicted by non-error toasts.
+
 ## 0.36.2
 
 ### Patch Changes
