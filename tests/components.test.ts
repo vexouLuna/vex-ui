@@ -287,6 +287,23 @@ describe('useToast', () => {
     t.toasts.value.forEach((x) => t.dismiss(x.id))
     expect(t.toasts.value).toHaveLength(0)
   })
+
+  it('does not evict an error for a non-error toast, and pauses on hover', () => {
+    vi.useFakeTimers()
+    const t = useToast()
+    const e = t.show('bad', { kind: 'error' })
+    for (let i = 0; i < 4; i++) t.show(`m${i}`)
+    expect(t.toasts.value.some((x) => x.id === e)).toBe(true)
+    vi.advanceTimersByTime(3000)
+    expect(t.toasts.value.map((x) => x.id)).toEqual([e])
+    t.pause(e)
+    vi.advanceTimersByTime(60_000)
+    expect(t.toasts.value).toHaveLength(1)
+    t.resume(e)
+    vi.advanceTimersByTime(6000)
+    expect(t.toasts.value).toHaveLength(0)
+    vi.useRealTimers()
+  })
 })
 
 describe('VxTooltip', () => {

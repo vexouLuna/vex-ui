@@ -6,7 +6,7 @@
 // `datetime-local`. Picking a day keeps the time; with `time`, the field then selects the time to type over.
 // `seconds` (with `time`) adds seconds: `YYYY-MM-DD HH:mm:ss`, value `2026-10-23T14:05:09` (`datetime-local` step 1).
 // Attributes (aria-label, id, @blur, ...) go to the text input; class and style stay on the wrapper.
-import { computed, nextTick, ref, useAttrs, watch, type StyleValue } from 'vue'
+import { computed, nextTick, ref, useAttrs, watch, watchPostEffect, type StyleValue } from 'vue'
 import { isoDate, monthGrid, parseDate, showDate } from '../../utils/date'
 import VxPopover from '../overlays/VxPopover.vue'
 
@@ -28,6 +28,8 @@ const props = withDefaults(
   { time: false, seconds: false, invalid: false, disabled: false },
 )
 const model = defineModel<string>({ default: '' })
+/** True while the text isn't a usable date (the model then still holds the last good one). */
+const emit = defineEmits<{ 'invalid-change': [invalid: boolean] }>()
 const attrs = useAttrs()
 const inputAttrs = computed(() => {
   const { class: _class, style: _style, ...rest } = attrs
@@ -51,6 +53,10 @@ function read(t: string): string | null {
 const whole = computed(() =>
   !props.time ? /^\d{4}\D\d\d\D\d\d$/ : props.seconds ? /^\d{4}\D\d\d\D\d\d[ T]\d\d:\d\d:\d\d/ : /^\d{4}\D\d\d\D\d\d[ T]\d\d:\d\d/,
 )
+const unreadable = computed(() => read(text.value) === null)
+// Native validation: a surrounding <form> won't submit the stale model while the text is unusable.
+watchPostEffect(() => input.value?.setCustomValidity(unreadable.value ? 'Enter a valid date' : ''))
+watch(unreadable, (v) => emit('invalid-change', v))
 const timeEnd = computed(() => (props.seconds ? 19 : 16))
 
 function onInput(e: Event) {
@@ -69,6 +75,11 @@ function commit() {
   model.value = v
   text.value = showDate(v)
   bad.value = false
+}
+
+function onEnter(e: KeyboardEvent) {
+  commit()
+  if (bad.value) e.preventDefault() // don't submit a surrounding form with the old date
 }
 
 // Calendar
@@ -137,7 +148,7 @@ async function pick(d: string, close: () => void) {
       :aria-invalid="invalid || bad || undefined"
       @input="onInput"
       @change="commit"
-      @keydown.enter="commit"
+      @keydown.enter="onEnter"
     />
     <VxPopover class="vx-input-clear" align="right" width="252px" role="dialog" @open="onOpen">
       <template #trigger="{ toggle, open }">
