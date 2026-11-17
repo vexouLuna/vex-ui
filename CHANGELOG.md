@@ -1,5 +1,11 @@
 # @vex/ui
 
+## 0.37.0
+
+### Minor Changes
+
+- 0bf761a: `VxCallout` takes `dismissable`: a close button that emits `dismiss` (the page clears its error). `VxSaveBar` takes `error-dismissable` and emits `dismiss-error`.
+
 ## 0.36.3
 
 ### Patch Changes
