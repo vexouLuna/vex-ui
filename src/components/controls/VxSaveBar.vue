@@ -2,6 +2,7 @@
 // The bar under a settings form: "N unsaved changes", Undo and Save. It sticks to the bottom of the screen while the
 // form scrolls, and lights up while there's something to save. `error` shows what went wrong above the buttons.
 // With `submit`, Save is the form's submit button (the form's @submit saves); otherwise it emits `save`.
+// `errorDismissable` puts a close button on the error; it emits `dismiss-error` and the parent clears `error`.
 // The words are props: `saveLabel`, `undoLabel` (e.g. "Reset"), `errorTitle`, and `statusText` for the count line.
 import { computed } from 'vue'
 import VxButton from './VxButton.vue'
@@ -14,6 +15,7 @@ const props = withDefaults(
     /** Save is blocked (e.g. a field is invalid) even with changes. */
     blocked?: boolean
     error?: string | null
+    errorDismissable?: boolean
     submit?: boolean
     saveLabel?: string
     undoLabel?: string
@@ -25,6 +27,7 @@ const props = withDefaults(
     saving: false,
     blocked: false,
     error: null,
+    errorDismissable: false,
     submit: false,
     saveLabel: 'Save',
     undoLabel: 'Undo changes',
@@ -32,13 +35,20 @@ const props = withDefaults(
     statusText: (n: number) => (n ? `${n} unsaved ${n === 1 ? 'change' : 'changes'}` : 'No changes'),
   },
 )
-defineEmits<{ save: []; undo: [] }>()
+defineEmits<{ save: []; undo: []; 'dismiss-error': [] }>()
 const status = computed(() => props.statusText(props.count))
 </script>
 
 <template>
   <div class="vx-savebar vx-panel" :class="{ 'is-on': count > 0 || error }">
-    <VxCallout v-if="error" tone="error" :title="errorTitle" class="vx-savebar-error">{{ error }}</VxCallout>
+    <VxCallout
+      v-if="error"
+      tone="error"
+      :title="errorTitle"
+      :dismissable="errorDismissable"
+      class="vx-savebar-error"
+      @dismiss="$emit('dismiss-error')"
+    >{{ error }}</VxCallout>
     <span class="vx-muted" role="status">{{ status }}</span>
     <span class="vx-savebar-gap"></span>
     <VxButton :disabled="!count || saving" @click="$emit('undo')">{{ undoLabel }}</VxButton>

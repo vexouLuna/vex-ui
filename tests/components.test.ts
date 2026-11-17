@@ -17,6 +17,7 @@ import VxPopover from '../src/components/overlays/VxPopover.vue'
 import VxSelect from '../src/components/controls/VxSelect.vue'
 import VxIcon from '../src/components/controls/VxIcon.vue'
 import VxConfirm from '../src/components/overlays/VxConfirm.vue'
+import VxCallout from '../src/components/feedback/VxCallout.vue'
 import VxLoadState from '../src/components/feedback/VxLoadState.vue'
 import VxAccountMenu from '../src/components/chrome/VxAccountMenu.vue'
 import VxSiteHeader from '../src/components/chrome/VxSiteHeader.vue'
@@ -466,6 +467,29 @@ describe('VxSaveBar', () => {
     expect(w.text()).toContain('Unsaved changes')
     expect(w.text()).toContain('Reset')
     expect(w.text()).toContain('Not saved')
+  })
+
+  it('emits dismiss-error from the error close button when errorDismissable', async () => {
+    const w = mount(VxSaveBar, { props: { count: 1, error: 'x' } })
+    expect(w.find('.vx-callout button').exists()).toBe(false)
+    await w.setProps({ errorDismissable: true })
+    await w.get('.vx-callout button').trigger('click')
+    expect(w.emitted('dismiss-error')).toHaveLength(1)
+    expect(w.emitted('save')).toBeUndefined()
+  })
+})
+
+describe('VxCallout', () => {
+  it('has no close button unless dismissable, then emits dismiss and keeps its role', async () => {
+    const w = mount(VxCallout, { props: { tone: 'error' }, slots: { default: 'boom' } })
+    expect(w.find('button').exists()).toBe(false)
+    await w.setProps({ dismissable: true })
+    expect(w.attributes('role')).toBe('alert')
+    const close = w.get('button')
+    expect(close.attributes('aria-label')).toBe('Dismiss')
+    expect(close.classes()).toEqual(expect.arrayContaining(['is-icon', 'is-sm', 'is-ghost']))
+    await close.trigger('click')
+    expect(w.emitted('dismiss')).toHaveLength(1)
   })
 })
 

@@ -11,6 +11,8 @@ const loadChannel = () => {
   setTimeout(() => (channel.value = { name: 'vexouluna', replies: 12 }), 1200)
 }
 loadChannel()
+const failed = ref(true)
+const banned = ref(true)
 </script>
 
 <template>
@@ -28,6 +30,19 @@ loadChannel()
           <VxCallout tone="error" title="Parse error at 1:24">
             <pre class="vx-code" style="margin-top: 6px">!so {user} &gt; "check out {user.display_name} at twitch.tv/{user.login} — they were last playing {user.game}"</pre>
           </VxCallout>
+        </div>
+      </StoryFrame>
+    </Variant>
+    <Variant title="Callouts: dismissable">
+      <!-- `dismissable` adds the close button; the page clears its own error on `dismiss`. -->
+      <StoryFrame site="dtp">
+        <div class="story-col" style="max-width: 640px">
+          <VxCallout v-if="failed" tone="error" dismissable @dismiss="failed = false">Couldn't save: the bot API answered 502.</VxCallout>
+          <VxCallout v-if="banned" tone="error" title="Banned from #somechannel" dismissable @dismiss="banned = false">
+            The bot was banned 2 hours ago.
+            <template #actions><VxButton size="sm">Rejoin</VxButton></template>
+          </VxCallout>
+          <VxButton v-if="!failed || !banned" size="sm" @click="failed = banned = true">Show them again</VxButton>
         </div>
       </StoryFrame>
     </Variant>
