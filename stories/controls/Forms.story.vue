@@ -5,7 +5,7 @@ import StoryFrame from '../StoryFrame.vue'
 
 const f = reactive({
   name: 'vexouluna', search: '', delay: 1.5, sort: 'new', check: true, radio: 'all', sw: true, sw2: false, vol: 40,
-  from: '2026-09-01', to: '2026-09-24', note: 'Live most weeknights from 8pm.', saved: 'Live most weeknights from 8pm.', day: '2026-10-23', at: '2026-10-23T14:05', atSec: '2026-10-23T20:00:00', due: '',
+  from: '2026-09-01', to: '2026-09-24', note: 'Live most weeknights from 8pm.', saved: 'Live most weeknights from 8pm.', saveError: 'The bot API answered 502.' as string | null, day: '2026-10-23', at: '2026-10-23T14:05', atSec: '2026-10-23T20:00:00', due: '',
 })
 const nameErr = computed(() => (f.name.length < 3 ? 'At least 3 characters.' : ''))
 const sorts = [
@@ -101,7 +101,7 @@ const sorts = [
             submit
             @undo="f.note = f.saved"
           />
-          <VxSaveBar :count="3" error="The bot API answered 502." />
+          <VxSaveBar :count="3" :error="f.saveError" error-dismissable @dismiss-error="f.saveError = null" />
           <VxSaveBar
             :count="2"
             undo-label="Reset"
